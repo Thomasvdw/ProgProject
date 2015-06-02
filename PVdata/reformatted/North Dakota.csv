@@ -1,4 +1,4 @@
-Zipcode,State,Size (kW DC),Cost,Date Installed
-58104,ND,7.45,35000.0,9/5/2012
-58461,ND,26.32,,11/14/2012
-58202,ND,51.75,,07/30/2012
+Zipcode,State,Size,Cost,Date,Latitude,Longitude,Solar Radiation - Annual Average (kWh/m2/day),County,INCITS
+58104,ND,7.45,35000.0,9/5/2012,46.87,-96.81,4;13,Cass,48067
+58461,ND,26.32,,11/14/2012,46.65,-98.19,4;29,Barnes,38003
+58202,ND,51.75,,07/30/2012,47.91,-97.07,3;98,Grand Forks,38035
