@@ -9,7 +9,7 @@ been visualized in many ways the last decades. Large organizations such governme
 ### Solution ###
 Unfortunately, it seems that growth is mostly visualized in terms of total installed capacity, or amount of jobs in the renewable energy sector. I want to change this, and visualize the growth of renewable energy per US state based on a number of different parameters:
 
-- State population (on 1-1-19XX or 1-1-20XX);
+- State population (on 1-1-19XX or 1-1-20XX), total capacity divided by state population; 
 - "Growth" in terms of normalized costs per kW (based on installed panels);
 - Growth of generated electrity per state based on average solar radiation per state;
 
