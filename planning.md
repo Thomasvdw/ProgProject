@@ -10,7 +10,7 @@ US map drawing and coloring, data sets ready and checked of:
   
   o	Make it work with one of below data (for one date in time): TODO
   
-#### per state population per date and size per date; #### 
+#### per state population per date and size per date; 
   o	population: CHECK
   
   o	size: CHECK
