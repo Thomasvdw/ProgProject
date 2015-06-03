@@ -27,6 +27,7 @@ Each solar panel that is entered into the database, has information on the State
 ## Sketch of visualization ##
 
 The US map will be based on this example: http://bl.ocks.org/NPashaP/raw/a74faf20b492ad377312/
+
 The linegraph will look like this: http://projects.flowingdata.com/life-expectancy/
 
 ## Planning ##
@@ -44,9 +45,12 @@ Fourth week: Fine-tune, cleaning all code, cleaning up GitHub. Prepare final ver
 
 ## Potential difficulties ##
 
-1) I have not worked with multiple scripts on a single page, this may cause problems to implement; 
-2) I have not worked with dropdown menu's to select through JavaScript, this may cause problems to implement; 
-3) Some data sets are so large that they may cause the script to run rather slow, this may cause problems in loading the visualization. 
+1) I have not worked with multiple scripts on a single page, this may cause problems to implement;
+
+2) I have not worked with dropdown menu's to select through JavaScript, this may cause problems to implement;
+
+3) Some data sets are so large that they may cause the script to run rather slow, this may cause problems in loading the visualization.
+
 
 ## Optional extra's ##
 
