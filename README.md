@@ -44,9 +44,12 @@ Fourth week: Fine-tune, cleaning all code, cleaning up GitHub. Prepare final ver
 
 ## Potential difficulties ##
 
-1) I have not worked with multiple scripts on a single page, this may cause problems to implement; 
-2) I have not worked with dropdown menu's to select through JavaScript, this may cause problems to implement; 
-3) Some data sets are so large that they may cause the script to run rather slow, this may cause problems in loading the visualization. 
+1) I have not worked with multiple scripts on a single page, this may cause problems to implement;
+
+2) I have not worked with dropdown menu's to select through JavaScript, this may cause problems to implement;
+
+3) Some data sets are so large that they may cause the script to run rather slow, this may cause problems in loading the visualization.
+
 
 ## Optional extra's ##
 
