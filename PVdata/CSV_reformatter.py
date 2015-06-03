@@ -62,78 +62,77 @@ def main():
     dict_county_to_incits = county_to_incits()
     
 
-    for file in os.listdir("StatesCSVs/"):
-        print "reformatting..." + file
-        FILENAME = "StatesCSVs/" + file  
-        OUTPUT_CSV = "reformatted/" + file
+    
+    FILENAME = "StatesCSVs/Arkansas.csv"
+    OUTPUT_CSV = "reformatted/AR.csv"
         
-        zipcode = []
-        state = []
-        size = []
-        cost = []
-        date = []
-        latitude = []
-        longitude = []
-        solarradiation = []
-        counties = []
-        incits = []
+    zipcode = []
+    state = []
+    size = []
+    cost = []
+    date = []
+    latitude = []
+    longitude = []
+    solarradiation = []
+    counties = []
+    incits = []
+    
+    zipcode.append('Zipcode')
+    state.append('State')
+    size.append('Size')
+    cost.append('Cost')
+    date.append('Date')        
+    latitude.append('Latitude')
+    longitude.append('Longitude')
+    solarradiation.append('Solar Radiation - Annual Average (kWh/m2/day)')
+    counties.append('County')
+    incits.append('INCITS')
+    
+    seperator = ","
+    with open(FILENAME, 'r') as csvfile:
+        reader = csv.reader(csvfile, delimiter= seperator)
+        next(csvfile)
+        for row in reader:
+            zipcode.append(row[0])
+            state.append(row[1])
+            size.append(row[2])
+            cost.append(row[3])
+            current_date = row[4]
+            current_date = current_date.replace("-", "/")
+            date.append(current_date)
+            try: 
+                latlon = dict_zipcodes[row[0]]
+                lat = latlon[0]
+                lon = latlon[1]
+                latitude.append(lat)
+                longitude.append(lon)
+                    
+                radiation = dict_solar_by_zip[row[0]]
+                solarradiation.append(radiation)
+                    
+                county = dict_zipcode_to_county[row[0]]
+                counties.append(county)
+                    
+                county_id = dict_county_to_incits[county]
+                incits.append(county_id)
+                    
+            except KeyError:
+                latitude.append('0')
+                longitude.append('0')
+                solarradiation.append('0')
+                counties.append('0')
+                incits.append('0')
+                pass        
         
-        zipcode.append('Zipcode')
-        state.append('State')
-        size.append('Size')
-        cost.append('Cost')
-        date.append('Date')        
-        latitude.append('Latitude')
-        longitude.append('Longitude')
-        solarradiation.append('Solar Radiation - Annual Average (kWh/m2/day)')
-        counties.append('County')
-        incits.append('INCITS')
-
-        seperator = ","
-        with open(FILENAME, 'r') as csvfile:
-            reader = csv.reader(csvfile, delimiter= seperator)
-            next(csvfile)
-            for row in reader:
-                zipcode.append(row[0])
-                state.append(row[1])
-                size.append(row[2])
-                cost.append(row[3])
-                current_date = row[4]
-                current_date = current_date.replace("-", "/")
-                date.append(current_date)
-                try: 
-                    latlon = dict_zipcodes[row[0]]
-                    lat = latlon[0]
-                    lon = latlon[1]
-                    latitude.append(lat)
-                    longitude.append(lon)
-                    
-                    radiation = dict_solar_by_zip[row[0]]
-                    solarradiation.append(radiation)
-                    
-                    county = dict_zipcode_to_county[row[0]]
-                    counties.append(county)
-                    
-                    county_id = dict_county_to_incits[county]
-                    incits.append(county_id)
-                    
-                except KeyError:
-                    latitude.append('0')
-                    longitude.append('0')
-                    solarradiation.append('0')
-                    counties.append('0')
-                    incits.append('0')
-                    pass        
         
-        
-        with open(OUTPUT_CSV, 'wb') as f:
-            writer = csv.writer(f)
-            for i in range(len(zipcode)):
-                writer.writerow([zipcode[i], 
-                                 state[i], 
-                                 size[i], 
-                                 cost[i], 
-                                 date[i], 
+    with open(OUTPUT_CSV, 'wb') as f:
+        writer = csv.writer(f)
+        for i in range(len(zipcode)):
+            writer.writerow([zipcode[i], 
+                             state[i], 
+                             size[i], 
+                             cost[i], 
+                             date[i], 
                                  latitude[i], 
                                  longitude[i], 
                                  solarradiation[i], 

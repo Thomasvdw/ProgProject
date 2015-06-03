@@ -68,9 +68,20 @@
 		}
 		
 		d3.select(id).selectAll(".state")
-			.data(uStatePaths).enter().append("path").attr("class","state").attr("d",function(d){ return d.d;})
+			.data(uStatePaths)
+			.enter()
+			.append("path")
+			.attr("class","state")
+			.attr("d",function(d){ return d.d;})
 			.style("fill",function(d){ return data[d.id].color; })
-			.on("mouseover", mouseOver).on("mouseout", mouseOut);
+			.on("mouseover", mouseOver)
+			.on("mouseout", mouseOut)
+			.on("click", function(d) {
+				d3.select(id).selectAll(".state")
+				.style("fill", function(d) { return data[d.id].color = "#ffffff"})
+				console.log("hello"); 
+			});
+			
 	}
 	this.uStates=uStates;
 })();
