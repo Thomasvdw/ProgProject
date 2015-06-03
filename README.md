@@ -27,6 +27,7 @@ Each solar panel that is entered into the database, has information on the State
 ## Sketch of visualization ##
 
 The US map will be based on this example: http://bl.ocks.org/NPashaP/raw/a74faf20b492ad377312/
+
 The linegraph will look like this: http://projects.flowingdata.com/life-expectancy/
 
 ## Planning ##
