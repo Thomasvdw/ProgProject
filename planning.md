@@ -17,7 +17,7 @@ US map drawing and coloring, data sets ready and checked of:
   
 ####	per state normalized costs per date; ####
   o	Costs / size: CHECK
-    •	per state generated electricity based on avg. solar radiation per location per year
+####	per state generated electricity based on avg. solar radiation per location per year ####
     
   o	Assumption: size is kW STC (Standard Test Conditions), and a 300W solar panel has an area of 1.651* 0.9906 = 1.6354806 m2. This equals 183 W/m2.  To get the area needed for each location, the size (in kW) is divided by the wattage per m2. The generated electricity is then calculated by multiplying the area with the avg. solar radiation of each location. 
 
