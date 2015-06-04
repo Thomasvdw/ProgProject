@@ -33,6 +33,9 @@ June 2015
 		- Use of solar radiation data from http://solargis.info/ to calculate the generated electricity per location. 
 - Drawing the states of the US is from the us.json file.
 
+## Sketch of final product:
+
+See sketches map for both the map-view and the line graph-view. 
 
 
 
