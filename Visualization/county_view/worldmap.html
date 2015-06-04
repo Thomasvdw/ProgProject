@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<!--
+
+Author: Thomas van der Wardt
+Student number: 10900578
+File: worldmap.html
+External files: Combined_PVdata.csv, world-50m.json, d3.v3.js, topojson.v1.js, queue.v1.min.js
+Last edited: 25-5-2015
+
+-->
+<html>
+    <head>
+        <title>PV-data map US</title>
+
+        <link rel="stylesheet" type="text/css" href="worldmapstyle.css">
+		<meta charset="UTF-8">
+    </head>
+	<body>
+		<script src="d3.v3.js"></script>
+		<script src="topojson.v1.js"></script>
+		<script src="queue.v1.min.js"></script>
+		<script>
+			'use strict'
+			// Wait for data to load before moving on with drawing the map
+			var q = queue(1);
+			q.defer(d3.json, "world-50m.json");
+			q.defer(d3.csv, "PVdata/reformatted/Combined_PVdata.csv");
+			q.await(drawMap);
+
+			function drawMap(errors, map, pvdata){
+			// Function is called after data is loaded, and takes the data of the
+			// world (path data for svg) and data of PVs
+				var width = 1200,
+					height = 500;
+
+			// Use conicEquidistant projection; countries look deformed but
+			// shows their actual size on the map
+			// Following lines of code originally from:
+			// http://bl.ocks.org/mbostock/3734317
+				var projection = d3.geo.conicEquidistant()
+					.center([0, 15])
+					.scale(128)
+					.translate([width / 2, height / 2])
+					.precision(.1);
+
+				var path = d3.geo.path()
+					.projection(projection);
+
+				var graticule = d3.geo.graticule();
+
+				var svg = d3.select("body").append("svg")
+					.attr("width", width)
+					.attr("height", height);
+
+				svg.append("defs").append("path")
+					.datum({type: "Sphere"})
+					.attr("id", "sphere")
+					.attr("d", path);
+
+				svg.append("use")
+					.attr("class", "stroke")
+					.attr("xlink:href", "#sphere");
+
+				svg.append("use")
+					.attr("class", "fill")
+					.attr("xlink:href", "#sphere");
+
+				svg.append("path")
+					.datum(graticule)
+					.attr("class", "graticule")
+					.attr("d", path);
+
+				d3.json("world-50m.json", function(error, world) {
+				  if (error) return console.error(error);
+
+				  // Inserts the data of land, returned as
+				  // FeatureCollection, and adds this as path,
+				  // and is stroked according to CSS.
+				  svg.insert("path", ".graticule")
+					  .datum(topojson.feature(world, world.objects.land))
+					  .attr("class", "land")
+					  .attr("d", path);
+
+				  // Filter function to make sure shared edges are only
+				  // stroked once.
+				  svg.insert("path", ".graticule")
+					  .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
+					  .attr("class", "boundary")
+					  .attr("d", path);
+				});
+
+				// Data rectangle, and written text elements and positioning. 
+				
+				draw_pvdata(pvdata);
+				 
+				function draw_pvdata(data) {
+					data.forEach(function(d) {
+						d.Zipcode
+					}
+					});
+				
+					// Create empty bins, and link data with it. Create a circle based on the impact energy (size and color)
+					svg.selectAll("circle.pv")
+						.data(data)
+						.enter()
+						.append("circle")
+						.attr("cx", function(d){return d.x;})
+						.attr("cy", function(d){return d.y;})
+						.attr("r", function(d){
+
+						})
+						.attr("fill", function(d){
+					
+						})
+						.attr("stroke", "black")
+						.on("mouseover", function(d){
+						});
+					*/
+				}	
+			}
+		</script>
+	</body>
+</html>
