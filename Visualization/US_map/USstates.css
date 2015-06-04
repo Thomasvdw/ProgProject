@@ -2,3 +2,20 @@
   fill: none;
   stroke: "#fff";
 }
+
+.visualization {
+	margin-left: 50px;
+}
+
+.first_dropdown {
+	position: absolute;
+	margin-left: 35%;
+	margin-right: auto;
+	margin-top: 10px;
+}
+
+.second_dropdown {
+	position: absolute;
+	margin-left: 50%;
+	margin-right: auto;
+}
