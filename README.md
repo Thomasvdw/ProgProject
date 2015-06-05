@@ -27,10 +27,10 @@ Each solar panel that is entered into the database, has information on the State
 ## Sketch of visualization ##
 
 the US map will look like this: 
-![US map sketch](https://github.com/Thomasvdw/ProgProject/tree/master/Sketches/Map-view.png)
+![US map sketch](https://raw.githubusercontent.com/Thomasvdw/ProgProject/master/Sketches/Map-view.png)
 
 The linegraph will look like this: 
-![Line graph sketch](https://github.com/Thomasvdw/ProgProject/tree/master/Sketches/graph-view.png)
+![Line graph sketch](https://raw.githubusercontent.com/Thomasvdw/ProgProject/master/Sketches/graph-view.png)
 
 ## Planning ##
 
