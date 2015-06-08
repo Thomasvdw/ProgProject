@@ -3,19 +3,22 @@
   stroke: "#fff";
 }
 
-.visualization {
-	margin-left: 50px;
-}
-
 .first_dropdown {
-	position: absolute;
-	margin-left: 35%;
-	margin-right: auto;
+	float: left;
 	margin-top: 10px;
+	margin-left: 20%;
 }
 
 .second_dropdown {
-	position: absolute;
-	margin-left: 50%;
-	margin-right: auto;
+	float: right;
+	margin-right: 20%;
+}
+
+.third_dropdown {
+	float: right;
+	margin-right: 20%;
+}
+
+svg {
+	margin-top: 10px;
 }

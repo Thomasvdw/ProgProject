@@ -8,10 +8,8 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 		d3.select("#USmap").on("click", drawUSmap);
 		
 		function drawUSmap(){
-			
 			var svg = d3.selectAll("svg").remove()
-			
-		
+	
 			var q = queue(1);
 			for (var i = 0; i < state_ids.length; i++){
 				q.defer(d3.csv, "\\Data\\PVdata\\population_energy_growth\\solar_size\\solar_size_" + state_ids[i] + ".csv");
@@ -26,20 +24,20 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 				
 			var projection = d3.geo.albersUsa()
 				.scale(1000)
-				.translate([(width - 100) / 2, height / 2]);
+				.translate([width / 2, (height + 150) / 2]);
 
 			var path = d3.geo.path()
 				.projection(projection);
 
 			var svg = d3.select("body").append("svg")
 				.attr("width", width)
-				.attr("height", height)
-				.attr("class", "visualization");
-			
+				.attr("height", height + 150)
+				.attr("class", "center-block");
+							
 			var data_reference = svg.insert("g");
 				data_reference.append("rect")
-					.attr("x", 0)
-					.attr("y", 50)
+					.attr("x", (width / 2) - 75)
+					.attr("y", 10)
 					.attr("width", 150)
 					.attr("height", 100)
 					.attr("stroke", "black")
@@ -55,14 +53,28 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 					var fullNames = {};
 					var nameSize = {};
 					var namePopulation = {};
+					var sizes = []
 					var x = 0;
 					csv.forEach(function(d,i){
 						fullNames[d.id] = d.name;
 						nameCodes[d.id] = d.code;
 						nameSize[d.code] = allData[x];
 						namePopulation[d.code] = allData[x + 1];
+						sizes.push(allData[x]);
 						x += 2;
+						
 					});
+					
+					max_sizes = []
+					
+					for (var x = 0; x < sizes.length; x++){
+						var tmp = [];
+						for (var y = 0; y < sizes[x].length; y++){
+							tmp.push(parseFloat(sizes[x][y].Size));
+						}
+						max_sizes.push(Math.max.apply(Math, tmp));
+					}
+					var global_max = Math.max.apply(Math, max_sizes);
 					
 					svg.append("g")
 					.attr("class", "states-bundle")
@@ -79,8 +91,8 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 						for (var j = 0; j < texts.length; j++){
 							data_reference.append("text")
 								.text(texts[j])
-								.attr("x", 5)
-								.attr("y", 65 + 23 * j)
+								.attr("x", (width / 2) - 75)
+								.attr("y", 22.5 + 23 * j)
 								.attr("font-family", "Verdana")
 								.attr("font-size", "12.5");
 						}
@@ -91,8 +103,8 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 						for (var i = 0; i < popup_texts.length; i++){
 							data_reference.append("text")
 								.text(popup_texts[i])
-								.attr("x", 70)
-								.attr("y", 65 + 23 * i)
+								.attr("x", (width / 2) - 75 + 70)
+								.attr("y", 22.5 + 23 * i)
 								.attr("font-family", "Verdana")
 								.attr("font-size", "12.5");
 						}
@@ -102,7 +114,7 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 					})
 					.attr("fill", "#f7fcfd");
 				
-				setTimeout(recolor, 1000);
+				setTimeout(recolor, 2500);
 				
 				var startSize = 14;
 				var startDate = 20;
@@ -119,15 +131,8 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 						.append("path")
 						.attr("d", path)
 						.on("mouseover", function(d) {
-							
-							var size = parseFloat(nameSize[nameCodes[d.id]][startSize].Size);
-							var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population);
-							var size_before = parseFloat(nameSize[nameCodes[d.id]][startSize + 1].Size);
-							var size_difference = parseFloat(size - size_before);
-							var growth = parseFloat(size_difference / size_before);	
-							
+													
 							var texts = ["State: ", "Growth: ", "Capacity: ", "Population: "];
-							
 							d3.selectAll("text").remove()
 							for (var j = 0; j < texts.length; j++){
 								var font_size = "12.5";
@@ -136,11 +141,17 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 								}
 								data_reference.append("text")
 									.text(texts[j])
-									.attr("x", 5)
-									.attr("y", 65 + 23 * j)
+									.attr("x", (width / 2) - 75)
+									.attr("y", 22.5 + 23 * j)
 									.attr("font-family", "Verdana")
 									.attr("font-size", font_size);
 							}
+							
+							var size = parseFloat(nameSize[nameCodes[d.id]][startSize].Size);
+							var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population);
+							var size_before = parseFloat(nameSize[nameCodes[d.id]][startSize + 1].Size);
+							var size_difference = parseFloat(size - size_before);
+							var growth = parseFloat(size_difference / size_before);
 							
 							var popup_texts = [fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][startSize].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][startDate].Population) + " mln"];
 							
@@ -156,8 +167,8 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 								}
 								data_reference.append("text")
 									.text(popup_texts[i])
-									.attr("x", 70 + j)
-									.attr("y", 65 + 23 * i)
+									.attr("x", (width / 2) - 75 + 70 + j)
+									.attr("y", 22.5 + 23 * i)
 									.attr("font-family", "Verdana")
 									.attr("font-size", font_size);
 								j = 0;
@@ -166,11 +177,15 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 						.attr("stroke", "black")
 						.attr("fill", function(d,i) {
 							if (nameSize[nameCodes[d.id]] != undefined){
+								
+								// Divide current capacity by highest global capacity (of all states)
 								var size = parseFloat(nameSize[nameCodes[d.id]][startSize].Size);
 								var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population);
 								var size_before = parseFloat(nameSize[nameCodes[d.id]][startSize + 1].Size);
 								var size_difference = parseFloat(size - size_before);
-								var growth = parseFloat(size_difference / size_before);						
+								var growth = parseFloat(size_difference / size_before);		
+
+								growth = size / global_max;
 								
 								if (isNaN(growth)){
 									growth = 0;
@@ -179,8 +194,7 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 								if (growth > 1){
 									growth = 1;
 								}
-								
-								console.log(growth);
+
 								return d3.interpolate("#f7fcfd", "#00441b")(growth);
 							}
 							var growth = 0;
@@ -190,7 +204,7 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 							startSize -= 1;
 							startDate += 1;
 							clearTimeout();
-							setTimeout(recolor, 2500);
+							setTimeout(recolor, 1000);
 						}
 						/*
 						else {
