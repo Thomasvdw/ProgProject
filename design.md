@@ -9,7 +9,7 @@ June 2015
 
 - Select other visualization: select in dropdown menu to go to line graph-view of the shown data, transitioning from the map-view to a line graph-view of the growth.  
 
-- Possibility to select which parameter to show: dropdown menu that lets user decide which of the three types of growth to show in the map-view. The line graph-view shows all three types in a single graph. 
+- Possibility to select which parameter to show: dropdown menu that lets user decide which of the three types of growth to show in the map-view or in the line graph. 
 
 ## List of JavaScript implementations required:
 
