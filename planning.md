@@ -32,16 +32,21 @@ US map drawing and coloring, data sets ready and checked of:
 Interaction to go from geo-view to graph-view, with ability to select certain states and to change showed data.
 
 Switching between all views smoothly: TODO
+
 Line graph ability to select certain states, changing graph: CHECK
+
 US-map works with all data: CHECK
+
 Make x-axis of date for US-map: TODO
+
 Place title above graphs: TODO
 
 
-##Third week: ##
 
-- Make sure all data is correct (TODO for cost/size and generated electricity)
-- 
+##Third week:##
+
+Make sure all data is correct (TODO for cost/size and generated electricity)
+
 If first and second week have succesfully been implemented, work on optional extra's. Else work on fixing problems that were encountered in the first or second week.
 
 ##Fourth week:##
