@@ -1,27 +1,7 @@
-
-var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
-						,'ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN'
-						,'MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH'
-						,'OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA'
-						,'WV','WI','WY']
-		
-		d3.select("#Line")
-			.on("click", drawLine);
-		
-		var q = queue(1);
-			for (var i = 0; i < state_ids.length; i++){
-				q.defer(d3.csv, "\\Data\\PVdata\\population_energy_growth\\solar_size\\solar_size_" + state_ids[i] + ".csv");
-				}
-			q.awaitAll(saveData);
+		function drawElectricityLine(){
 			
-		var lineData;
-		
-		function saveData(errors, Data){
-			lineData = Data;
-			return lineData;
-		}
-						
-		function drawLine(){
+			d3.selectAll(".third_dropdown").remove();
+			
 			var container = d3.selectAll(".container")
 			var third_dropdown = container.append("div")
 				.attr("class", "third_dropdown");
@@ -52,7 +32,7 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 					.attr("href", "#" + state_ids[i])
 					.text(state_ids[i]);
 			}
-			drawSelectedState("CA");
+			//drawSelectedState("CA");
 		}
 		
 		var drawn = 0;

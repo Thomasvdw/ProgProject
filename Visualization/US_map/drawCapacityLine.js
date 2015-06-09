@@ -6,7 +6,7 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 						,'WV','WI','WY']
 		
 		d3.select("#Line")
-			.on("click", drawLine);
+			.on("click", createDropdown);
 		
 		var q = queue(1);
 			for (var i = 0; i < state_ids.length; i++){
@@ -20,8 +20,62 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 			lineData = Data;
 			return lineData;
 		}
+		
+		function createDropdown(){
+			
+			d3.selectAll(".second_dropdown").remove();
+			
+			// Create dropdown menu to select other data in line-view
+			var container = d3.selectAll(".container")
+			var second_dropdown = container.append("div")
+				.attr("class", "second_dropdown");
+			var dropdown = second_dropdown.append("div")
+				.attr("class", "dropdown");
+			var button = dropdown.append("button")
+				.attr("class", "btn btn-default dropdown-toggle")
+				.attr("type", "button")
+				.attr("id", "menu1")
+				.attr("data-toggle", "dropdown")
+				.text("Select type of growth ")
+				.append("span")
+				.attr("class", "caret");
+			var ul = dropdown.append("ul")
+				.attr("class", "dropdown-menu")
+				.attr("role", "menu")
+				.attr("aria-labelledby", "menu1")
+			var li = ul.append("li")
+				.attr("role", "presentation")
+				.append("a")
+				.attr("id", "CostsperKw")
+				.on("click", drawCapacityLine)
+				.attr("role", "menuitem")
+				.attr("tabindex", "-1")
+				.attr("href", "javascript:void(0)")
+				.text("Normalized costs per kW");
+			var li = ul.append("li")
+				.attr("role", "presentation")
+				.append("a")
+				.attr("id", "Electricity")
+				.on("click", drawCapacityLine)
+				.attr("role", "menuitem")
+				.attr("tabindex", "-1")
+				.attr("href", "javascript:void(0)")
+				.text("Normalized generated electricity");
+			var li = ul.append("li")
+				.attr("role", "presentation")
+				.append("a")
+				.attr("id", "Capacity")
+				.on("click", drawCapacityLine)
+				.attr("role", "menuitem")
+				.attr("tabindex", "-1")
+				.attr("href", "javascript:void(0)")
+				.text("Capacity growth");
+		}
 						
-		function drawLine(){
+		function drawCapacityLine(){
+			
+			d3.selectAll(".third_dropdown").remove();
+			
 			var container = d3.selectAll(".container")
 			var third_dropdown = container.append("div")
 				.attr("class", "third_dropdown");
@@ -52,7 +106,7 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 					.attr("href", "#" + state_ids[i])
 					.text(state_ids[i]);
 			}
-			drawSelectedState("CA");
+			//drawSelectedState("CA");
 		}
 		
 		var drawn = 0;

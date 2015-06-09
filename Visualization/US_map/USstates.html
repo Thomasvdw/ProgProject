@@ -11,7 +11,7 @@ Last edited: 2-6-2015
 -->
 <html>
     <head>
-        <title>US States</title>
+        <title>Photovoltaic systems in US States</title>
 		<link rel="stylesheet" type="text/css" href="USstates.css">
 		<link rel="stylesheet" type="text/css" href="USline.css">
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -24,36 +24,27 @@ Last edited: 2-6-2015
 <div class="container">  
 <div class="first_dropdown">                                  
   <div class="dropdown">
-    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Select type of growth
+    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Select visualization
     <span class="caret"></span></button>
     <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="#Capacity">Capacity growth</a></li>
+      <li role="presentation"><a id="USmap" role="menuitem" tabindex="-1" href="javascript:void(0)">US map</a></li>
 	  <li role="presentation" class="divider"></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="#Costs">Normalized costs per kW</a></li>
-	  <li role="presentation" class="divider"></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="#Electricity">Generated electricity</a></li>
+      <li role="presentation"><a id="Line" role="menuitem" tabindex="-1" href="javascript:void(0)">Line</a></li>
+
     </ul>
 	</div>
 	</div>
 	<p>
-	<div class="second_dropdown">
-	<div class="dropdown">
-    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Select visualization
-    <span class="caret"></span></button>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-	  <li role="presentation"><a id="USmap" role="menuitem" tabindex="-1" href="javascript:void(0)"> US map</a></li>
-	  <li role="presentation" class="divider"></li>
-	  <li role="presentation"><a id="Line" role="menuitem" tabindex="-1" href="javascript:void(0)"> Line</a></li>
-    </ul>
-  </div>
-</div>
+
 
 <script src="d3.v3.js"></script>
 <script src="topojson.v1.min.js"></script>
 <script src="queue.v1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script src="drawUSmap.js"></script>
-<script src="drawLine.js"></script>
+<script src="drawCapacityUSmap.js"></script>
+<script src="drawCapacityLine.js"></script>
+<script src="drawCostsUSmap.js"></script>
+<script src="drawElectricityUSmap.js"></script>
 </body>
 </html>
