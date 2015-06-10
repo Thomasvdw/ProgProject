@@ -39,7 +39,7 @@ US-map works with all data: CHECK
 
 Line-graph works with all data: TODO
 
-Make x-axis of date for US-map: TODO
+Make x-axis of date for US-map: CHECK
 
 Place title above graphs: CHECK
 
