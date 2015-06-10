@@ -1,0 +1,15 @@
+.state-boundary {
+  fill: none;
+  stroke: "#fff";
+}
+
+.third_dropdown {
+	/*float: left;*/
+	margin-left:auto;
+	margin-right:auto;
+	width: 10%;
+}
+
+svg {
+	margin-top: 5px;
+}

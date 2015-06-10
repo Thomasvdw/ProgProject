@@ -1,8 +1,9 @@
 		function drawElectricityLine(){
 			
 			d3.selectAll(".third_dropdown").remove();
+			d3.selectAll("svg").remove();
 			
-			var container = d3.selectAll("test")
+			var container = d3.selectAll("#content")
 			var third_dropdown = container.append("div")
 				.attr("class", "third_dropdown");
 			var dropdown = third_dropdown.append("div")
@@ -26,7 +27,7 @@
 					.append("a")
 					.attr("id", state_ids[i])
 					.on("click", function(){
-						drawSelectedState(this.id);})
+						drawSelectedState(this.id, ElectricityData, "electricity");})
 					.attr("role", "menuitem")
 					.attr("tabindex", "-1")
 					.attr("href", "#" + state_ids[i])

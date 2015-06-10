@@ -1,67 +1,10 @@
-
-var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
-						,'ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN'
-						,'MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH'
-						,'OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA'
-						,'WV','WI','WY']
-
-		d3.select("#USmap").on("click", drawUSmap);
-		d3.select("#Capacity").on("click", drawUSmap);
-
-		
+	
 		function drawUSmap(){
+			
 			d3.selectAll(".third_dropdown").remove()
 			d3.selectAll(".second_dropdown").remove()
 			var svg = d3.selectAll("svg").remove()
 			
-			// Create dropdown menu to select other data in USmap-view
-			var container = d3.selectAll(".container")
-			var second_dropdown = container.append("div")
-				.attr("class", "second_dropdown");
-			var dropdown = second_dropdown.append("div")
-				.attr("class", "dropdown");
-			var button = dropdown.append("button")
-				.attr("class", "btn btn-default dropdown-toggle")
-				.attr("type", "button")
-				.attr("id", "menu1")
-				.attr("data-toggle", "dropdown")
-				.text("Select type of growth ")
-				.append("span")
-				.attr("class", "caret");
-			var ul = dropdown.append("ul")
-				.attr("class", "dropdown-menu")
-				.attr("role", "menu")
-				.attr("aria-labelledby", "menu1")
-			var li = ul.append("li")
-				.attr("role", "presentation")
-				.append("a")
-				.attr("id", "CostsperKw")
-				.on("click", drawUScostsmap)
-				.attr("role", "menuitem")
-				.attr("tabindex", "-1")
-				.attr("href", "javascript:void(0)")
-				.text("Normalized costs per kW");
-			var li = ul.append("li")
-				.attr("role", "presentation")
-				.append("a")
-				.attr("id", "Electricity")
-				.on("click", drawUSelectricitymap)
-				.attr("role", "menuitem")
-				.attr("tabindex", "-1")
-				.attr("href", "javascript:void(0)")
-				.text("Normalized generated electricity");
-			var li = ul.append("li")
-				.attr("role", "presentation")
-				.append("a")
-				.attr("id", "Capacity")
-				.on("click", drawUSmap)
-				.attr("role", "menuitem")
-				.attr("tabindex", "-1")
-				.attr("href", "javascript:void(0)")
-				.text("Capacity growth");
-			
-			
-	
 			var q = queue(1);
 			for (var i = 0; i < state_ids.length; i++){
 				q.defer(d3.csv, "\\Data\\PVdata\\population_energy_growth\\solar_size\\solar_size_" + state_ids[i] + ".csv");
@@ -71,7 +14,7 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 			
 		function drawMap(errors,allData){	
 		
-			var width = 1160,
+			var width = 1060,
 				height = 500;
 				
 			var projection = d3.geo.albersUsa()
@@ -85,6 +28,13 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 				.attr("width", width)
 				.attr("height", height + 150)
 				.attr("class", "center-block");
+				
+			svg.append("text")
+				.attr("x", (width / 2))             
+				.attr("y", 130)
+				.attr("text-anchor", "middle")  
+				.style("font-size", "16px") 
+				.text("US states PV capacity growth");
 							
 			var data_reference = svg.insert("g");
 				data_reference.append("rect")
@@ -139,9 +89,10 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 					.on("mouseover", function(d) {
 						var texts = ["State: ", "Growth: ", "Capacity: ", "Population: "];
 						
-						d3.selectAll("text").remove()
+						d3.selectAll(".text").remove()
 						for (var j = 0; j < texts.length; j++){
 							data_reference.append("text")
+								.attr("class", "text")
 								.text(texts[j])
 								.attr("x", (width / 2) - 75)
 								.attr("y", 22.5 + 23 * j)
@@ -154,6 +105,7 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 							
 						for (var i = 0; i < popup_texts.length; i++){
 							data_reference.append("text")
+								.attr("class", "text")
 								.text(popup_texts[i])
 								.attr("x", (width / 2) - 75 + 70)
 								.attr("y", 22.5 + 23 * i)
@@ -185,13 +137,14 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 						.on("mouseover", function(d) {
 													
 							var texts = ["State: ", "Growth: ", "Capacity: ", "Population: "];
-							d3.selectAll("text").remove()
+							d3.selectAll(".text").remove()
 							for (var j = 0; j < texts.length; j++){
 								var font_size = "12.5";
 								if (i == 3){
 									font_size = "11";
 								}
 								data_reference.append("text")
+									.attr("class", "text")						
 									.text(texts[j])
 									.attr("x", (width / 2) - 75)
 									.attr("y", 22.5 + 23 * j)
@@ -218,6 +171,7 @@ var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI'
 									font_size = "11";
 								}
 								data_reference.append("text")
+									.attr("class", "text")		
 									.text(popup_texts[i])
 									.attr("x", (width / 2) - 75 + 70 + j)
 									.attr("y", 22.5 + 23 * i)

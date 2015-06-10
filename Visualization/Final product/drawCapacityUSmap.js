@@ -1,16 +1,28 @@
-		function drawUScostsmap(){
+		d3.select("#USmap").on("click", drawUSmap);
+		d3.select("#Capacity").on("click", drawUSmap);
+					
+		var parseDate = d3.time.format("%d-%m-%Y").parse;
+		var dates = [parseDate("01-01-2000"), parseDate("01-01-2001"), parseDate("01-01-2002"),parseDate("01-01-2003"),
+					parseDate("01-01-2004"), parseDate("01-01-2005"), parseDate("01-01-2006"), parseDate("01-01-2007"),
+					parseDate("01-01-2008"), parseDate("01-01-2009"), parseDate("01-01-2010"), parseDate("01-01-2011"),
+					parseDate("01-01-2012"), parseDate("01-01-2013"), parseDate("01-01-2014"), parseDate("01-01-2015")]
+
+		
+		function drawUSmap(){
 			d3.selectAll(".third_dropdown").remove()
+			d3.selectAll(".second_dropdown").remove()
 			var svg = d3.selectAll("svg").remove()
 	
 			var q = queue(1);
 			for (var i = 0; i < state_ids.length; i++){
-				q.defer(d3.csv, "\\Data\\PVdata\\normalized_costs_growth\\cost_per_size\\cost_per_size_" + state_ids[i] + ".csv");
+				q.defer(d3.csv, "\\Data\\PVdata\\population_energy_growth\\solar_size\\solar_size_" + state_ids[i] + ".csv");
+				q.defer(d3.csv, "\\Data\\PVdata\\population_energy_growth\\population_size\\" + state_ids[i] + "_population.csv");
 			}
 			q.awaitAll(drawMap);
 			
 		function drawMap(errors,allData){	
 		
-			var width = 1060,
+			var width = 1160,
 				height = 500;
 				
 			var projection = d3.geo.albersUsa()
@@ -19,18 +31,27 @@
 
 			var path = d3.geo.path()
 				.projection(projection);
+			
+			var x = d3.time.scale()
+				.range([100,160])
+				.domain(dates);
+				
+			var xAxis = d3.svg.axis()
+				.scale(x)
+				.tickValues(dates)
+				.orient("bottom");
 
 			var svg = d3.select("body").append("svg")
 				.attr("width", width)
 				.attr("height", height + 150)
 				.attr("class", "center-block");
-			
+				
 			svg.append("text")
 				.attr("x", (width / 2))             
 				.attr("y", 130)
 				.attr("text-anchor", "middle")  
 				.style("font-size", "16px") 
-				.text("US states PV costs per kW change");
+				.text("US states PV capacity growth");
 							
 			var data_reference = svg.insert("g");
 				data_reference.append("rect")
@@ -41,6 +62,21 @@
 					.attr("stroke", "black")
 					.attr("fill", "transparent")
 			
+			var current_date_rect = svg.insert("g");
+				current_date_rect.append("rect")
+					.attr("class", "date_rect")
+					.attr("x", 95)
+					.attr("y", 580)
+					.attr("width", 10)
+					.attr("height", 10)
+					.attr("stroke", "black")
+					.attr("fill", "green")	
+			
+			svg.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate(0,600)")
+				.call(xAxis);
+			
 
 			d3.json("us.json", function(unitedState) {
 				var data = topojson.feature(unitedState, unitedState.objects.states).features;
@@ -50,13 +86,18 @@
 					var nameCodes = {};
 					var fullNames = {};
 					var nameSize = {};
+					var namePopulation = {};
+					var sizes = []
+					var x = 0;
 					csv.forEach(function(d,i){
 						fullNames[d.id] = d.name;
 						nameCodes[d.id] = d.code;
-						nameSize[d.code] = allData[i];
+						nameSize[d.code] = allData[x];
+						namePopulation[d.code] = allData[x + 1];
+						sizes.push(allData[x]);
+						x += 2;
+						
 					});
-					
-					/* Get max of costs
 					
 					max_sizes = []
 					
@@ -68,7 +109,6 @@
 						max_sizes.push(Math.max.apply(Math, tmp));
 					}
 					var global_max = Math.max.apply(Math, max_sizes);
-					*/
 					
 					svg.append("g")
 					.attr("class", "states-bundle")
@@ -79,7 +119,7 @@
 					.attr("d", path)
 					.attr("stroke", "black")
 					.on("mouseover", function(d) {
-						var texts = ["State: ", "Growth: ", "Capacity: "];
+						var texts = ["State: ", "Growth: ", "Capacity: ", "Population: "];
 						
 						d3.selectAll(".text").remove()
 						for (var j = 0; j < texts.length; j++){
@@ -92,19 +132,20 @@
 								.attr("font-size", "12.5");
 						}
 						
-						/*
+						
+
 						var growth = parseFloat((parseFloat(parseFloat(nameSize[nameCodes[d.id]][15].Size) - parseFloat(nameSize[nameCodes[d.id]][16].Size))/parseFloat(nameSize[nameCodes[d.id]][16].Size)));
 						var popup_texts = [fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][15].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][19].Population) + " mln"];
 							
 						for (var i = 0; i < popup_texts.length; i++){
 							data_reference.append("text")
+								.attr("class", "text")
 								.text(popup_texts[i])
 								.attr("x", (width / 2) - 75 + 70)
 								.attr("y", 22.5 + 23 * i)
 								.attr("font-family", "Verdana")
 								.attr("font-size", "12.5");
 						}
-						*/
 					})
 					.attr("class", function(d,i) { 
 						return nameCodes[d.id];
@@ -114,11 +155,18 @@
 				setTimeout(recolor, 2500);
 				
 				var startSize = 14;
-				var normal = startSize;
+				var startDate = 20;
+				var startRect = 95;
+				var stepRect = 60;
 				
 				function recolor(){
 					
 					if (startSize >= 0){
+						
+						d3.selectAll(".date_rect")
+							.transition()
+							.attr("x", startRect + (stepRect * (15 - startSize)));
+						
 					
 						svg.append("g")
 						.attr("class", "states-bundle")
@@ -137,14 +185,14 @@
 									font_size = "11";
 								}
 								data_reference.append("text")
-									.attr("class", "text")
+									.attr("class", "text")						
 									.text(texts[j])
 									.attr("x", (width / 2) - 75)
 									.attr("y", 22.5 + 23 * j)
 									.attr("font-family", "Verdana")
 									.attr("font-size", font_size);
 							}
-							/* 
+							
 							var size = parseFloat(nameSize[nameCodes[d.id]][startSize].Size);
 							var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population);
 							var size_before = parseFloat(nameSize[nameCodes[d.id]][startSize + 1].Size);
@@ -164,6 +212,7 @@
 									font_size = "11";
 								}
 								data_reference.append("text")
+									.attr("class", "text")		
 									.text(popup_texts[i])
 									.attr("x", (width / 2) - 75 + 70 + j)
 									.attr("y", 22.5 + 23 * i)
@@ -171,16 +220,28 @@
 									.attr("font-size", font_size);
 								j = 0;
 							}
-							*/
 						})
 						.attr("stroke", "black")
 						.attr("fill", function(d,i) {
 							if (nameSize[nameCodes[d.id]] != undefined){
 								
-								var size = parseFloat(nameSize[nameCodes[d.id]][startSize]["Cost/size"]);
-								var size_normal = parseFloat(nameSize[nameCodes[d.id]][normal]["Cost/size"]);
-								var size_difference = parseFloat(size - size_normal);
-								var growth = parseFloat(size_difference / size_normal);		
+								var normalSize = 14;
+								var normal = parseFloat(nameSize[nameCodes[d.id]][normalSize].Size);
+								
+								while (normal == 0){
+									normalSize -= 1;
+									if (normalSize < 0){
+										break;
+									}
+									normal = parseFloat(nameSize[nameCodes[d.id]][normalSize].Size);
+								}
+								
+								// Divide current capacity by highest global capacity (of all states)
+								var size = parseFloat(nameSize[nameCodes[d.id]][startSize].Size);
+								var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population);
+								
+								var size_difference = parseFloat(size - normal);
+								var growth = parseFloat(size_difference / normal);		
 								
 								if (isNaN(growth)){
 									growth = 0;
@@ -197,8 +258,9 @@
 						});
 						if (startSize != 0){
 							startSize -= 1;
+							startDate += 1;
 							clearTimeout();
-							setTimeout(recolor, 1000);
+							setTimeout(recolor, 2000);
 						}
 					}
 				}

@@ -10,7 +10,7 @@
 			
 		function drawMap(errors,allData){	
 		
-			var width = 1060,
+			var width = 1160,
 				height = 500;
 				
 			var projection = d3.geo.albersUsa()
@@ -19,6 +19,15 @@
 
 			var path = d3.geo.path()
 				.projection(projection);
+				
+			var x = d3.time.scale()
+				.range([100,160])
+				.domain(dates);
+				
+			var xAxis = d3.svg.axis()
+				.scale(x)
+				.tickValues(dates)
+				.orient("bottom");
 
 			var svg = d3.select("body").append("svg")
 				.attr("width", width)
@@ -40,6 +49,21 @@
 					.attr("height", 100)
 					.attr("stroke", "black")
 					.attr("fill", "transparent")
+
+			var current_date_rect = svg.insert("g");
+				current_date_rect.append("rect")
+					.attr("class", "date_rect")
+					.attr("x", 95)
+					.attr("y", 580)
+					.attr("width", 10)
+					.attr("height", 10)
+					.attr("stroke", "black")
+					.attr("fill", "green")	
+			
+			svg.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate(0,600)")
+				.call(xAxis);
 			
 
 			d3.json("us.json", function(unitedState) {
@@ -115,10 +139,16 @@
 				
 				var startSize = 14;
 				var normal = startSize;
+				var startRect = 95;
+				var stepRect = 60;			
 				
 				function recolor(){
 					
 					if (startSize >= 0){
+						
+						d3.selectAll(".date_rect")
+							.transition()
+							.attr("x", startRect + (stepRect * (15 - startSize)));
 					
 						svg.append("g")
 						.attr("class", "states-bundle")
