@@ -45,8 +45,8 @@ Place title above graphs: CHECK
 
 Fix data:
 
-  - Generated electricity
-  - Costs per kW
+  - Generated electricity: TODO
+  - Costs per kW: TODO
 
 
 
