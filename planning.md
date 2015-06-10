@@ -37,11 +37,16 @@ Line graph ability to select certain states, changing graph: CHECK
 
 US-map works with all data: CHECK
 
-Line-graph works with all data: TODO
+Line-graph works with all data: CHECK
 
 Make x-axis of date for US-map: CHECK
 
 Place title above graphs: CHECK
+
+Fix data:
+
+  - Generated electricity
+  - Costs per kW
 
 
 
