@@ -31,7 +31,7 @@ US map drawing and coloring, data sets ready and checked of:
 
 Interaction to go from geo-view to graph-view, with ability to select certain states and to change shown data:
 
-Switching between all views smoothly: TODO
+Switching between all views smoothly: CHECK
 
 Line graph ability to select certain states, changing graph: CHECK
 
@@ -41,7 +41,7 @@ Line-graph works with all data: TODO
 
 Make x-axis of date for US-map: TODO
 
-Place title above graphs: TODO
+Place title above graphs: CHECK
 
 
 
