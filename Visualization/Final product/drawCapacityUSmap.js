@@ -1,13 +1,14 @@
 		d3.select("#USmap").on("click", drawUSmap);
 		d3.select("#Capacity").on("click", drawUSmap);
-					
+		
+		// Variables that are used in all d3 javascript files. 
 		var parseDate = d3.time.format("%d-%m-%Y").parse;
 		var dates = [parseDate("01-01-2000"), parseDate("01-01-2001"), parseDate("01-01-2002"),parseDate("01-01-2003"),
 					parseDate("01-01-2004"), parseDate("01-01-2005"), parseDate("01-01-2006"), parseDate("01-01-2007"),
 					parseDate("01-01-2008"), parseDate("01-01-2009"), parseDate("01-01-2010"), parseDate("01-01-2011"),
 					parseDate("01-01-2012"), parseDate("01-01-2013"), parseDate("01-01-2014"), parseDate("01-01-2015")]
 
-		
+		// Draw map of capacity growth, after loading the capacity growth data. 
 		function drawUSmap(){
 			d3.selectAll(".third_dropdown").remove()
 			d3.selectAll(".second_dropdown").remove()
@@ -22,12 +23,13 @@
 			
 		function drawMap(errors,allData){	
 		
+			// Draw albersUsa projection on svg. 
 			var width = 1160,
 				height = 500;
 				
 			var projection = d3.geo.albersUsa()
-				.scale(1000)
-				.translate([width / 2, (height + 150) / 2]);
+				.scale(900)
+				.translate([width / 2 + 50, (height - 80) / 2]);
 
 			var path = d3.geo.path()
 				.projection(projection);
@@ -43,38 +45,63 @@
 
 			var svg = d3.select("body").append("svg")
 				.attr("width", width)
-				.attr("height", height + 150)
+				.attr("height", height)
 				.attr("class", "center-block");
 				
+			// insert Title
+			/*
 			svg.append("text")
 				.attr("x", (width / 2))             
 				.attr("y", 130)
 				.attr("text-anchor", "middle")  
 				.style("font-size", "16px") 
-				.text("US states PV capacity growth");
-							
+				.text("US states PV capacity growth");*/
+			
+			// Insert rectangle to show data in. 
 			var data_reference = svg.insert("g");
 				data_reference.append("rect")
-					.attr("x", (width / 2) - 75)
-					.attr("y", 10)
+					.attr("x", 120)
+					.attr("y", 30)
 					.attr("width", 150)
-					.attr("height", 100)
+					.attr("height", 200)
 					.attr("stroke", "black")
 					.attr("fill", "transparent")
+				data_reference.append("text")
+					.text("Legend & data")
+					.attr("x", 121)
+					.attr("y", 22)
+					.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+					.attr("font-size", "16");
+				data_reference.append("svg:image")
+					.attr("class", "next-button")
+					.attr("x", 235)
+					.attr("y", 195)
+					.attr("width", 30)
+					.attr("height", 29)
+					.attr("xlink:href", "images/next.png");
+				data_reference.append("svg:image")
+					.attr("class", "previous-button")
+					.attr("x", 125)
+					.attr("y", 195)
+					.attr("width", 30)
+					.attr("height", 29)
+					.attr("xlink:href", "images/previous.png");
 			
+			// Insert rectangle to point to current shown year
 			var current_date_rect = svg.insert("g");
 				current_date_rect.append("rect")
 					.attr("class", "date_rect")
 					.attr("x", 95)
-					.attr("y", 580)
+					.attr("y", 435)
 					.attr("width", 10)
 					.attr("height", 10)
 					.attr("stroke", "black")
 					.attr("fill", "green")	
+					
 			
 			svg.append("g")
 				.attr("class", "x axis")
-				.attr("transform", "translate(0,600)")
+				.attr("transform", "translate(0,450)")
 				.call(xAxis);
 			
 
@@ -119,32 +146,32 @@
 					.attr("d", path)
 					.attr("stroke", "black")
 					.on("mouseover", function(d) {
-						var texts = ["State: ", "Growth: ", "Capacity: ", "Population: "];
+						var texts = ["Year: ", "State: ", "Growth: ", "Capacity: ", "Population: "];
 						
 						d3.selectAll(".text").remove()
 						for (var j = 0; j < texts.length; j++){
 							data_reference.append("text")
 								.attr("class", "text")
 								.text(texts[j])
-								.attr("x", (width / 2) - 75)
-								.attr("y", 22.5 + 23 * j)
-								.attr("font-family", "Verdana")
-								.attr("font-size", "12.5");
+								.attr("x", 125)
+								.attr("y", 45 + 23 * j)
+								.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+								.attr("font-size", "10");
 						}
 						
 						
 
 						var growth = parseFloat((parseFloat(parseFloat(nameSize[nameCodes[d.id]][15].Size) - parseFloat(nameSize[nameCodes[d.id]][16].Size))/parseFloat(nameSize[nameCodes[d.id]][16].Size)));
-						var popup_texts = [fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][15].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][19].Population) + " mln"];
+						var popup_texts = [nameSize[nameCodes[d.id]][15].Date, fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][15].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][19].Population) + " mln"];
 							
 						for (var i = 0; i < popup_texts.length; i++){
 							data_reference.append("text")
 								.attr("class", "text")
 								.text(popup_texts[i])
-								.attr("x", (width / 2) - 75 + 70)
-								.attr("y", 22.5 + 23 * i)
-								.attr("font-family", "Verdana")
-								.attr("font-size", "12.5");
+								.attr("x", 125 + 70)
+								.attr("y", 45 + 23 * i)
+								.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+								.attr("font-size", "10");
 						}
 					})
 					.attr("class", function(d,i) { 
@@ -152,12 +179,15 @@
 					})
 					.attr("fill", "#f7fcfd");
 				
-				setTimeout(recolor, 2500);
+				//setTimeout(recolor, 2500);
 				
 				var startSize = 14;
 				var startDate = 20;
 				var startRect = 95;
 				var stepRect = 60;
+				
+				d3.selectAll(".next-button")
+					.on("click", recolor);
 				
 				function recolor(){
 					
@@ -177,20 +207,16 @@
 						.attr("d", path)
 						.on("mouseover", function(d) {
 													
-							var texts = ["State: ", "Growth: ", "Capacity: ", "Population: "];
+							var texts = ["Year: ", "State: ", "Growth: ", "Capacity: ", "Population: "];
 							d3.selectAll(".text").remove()
 							for (var j = 0; j < texts.length; j++){
-								var font_size = "12.5";
-								if (i == 3){
-									font_size = "11";
-								}
 								data_reference.append("text")
 									.attr("class", "text")						
 									.text(texts[j])
-									.attr("x", (width / 2) - 75)
-									.attr("y", 22.5 + 23 * j)
-									.attr("font-family", "Verdana")
-									.attr("font-size", font_size);
+									.attr("x", 125)
+									.attr("y", 45 + 23 * j)
+									.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+									.attr("font-size", "10");
 							}
 							
 							var size = parseFloat(nameSize[nameCodes[d.id]][startSize].Size);
@@ -199,26 +225,16 @@
 							var size_difference = parseFloat(size - size_before);
 							var growth = parseFloat(size_difference / size_before);
 							
-							var popup_texts = [fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][startSize].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][startDate].Population) + " mln"];
+							var popup_texts = [nameSize[nameCodes[d.id]][startSize + 1].Date, fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][startSize].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][startDate].Population) + " mln"];
 							
 							for (var i = 0; i < popup_texts.length; i++){
-								var j = 0;
-								var font_size = "12.5";
-								if (i == 0){
-									j -= 20
-								}
-								if (i == 3){
-									j += 10;
-									font_size = "11";
-								}
 								data_reference.append("text")
 									.attr("class", "text")		
 									.text(popup_texts[i])
-									.attr("x", (width / 2) - 75 + 70 + j)
-									.attr("y", 22.5 + 23 * i)
-									.attr("font-family", "Verdana")
-									.attr("font-size", font_size);
-								j = 0;
+									.attr("x", 125 + 70)
+									.attr("y", 45 + 23 * i)
+									.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+									.attr("font-size", "10");
 							}
 						})
 						.attr("stroke", "black")
@@ -260,7 +276,7 @@
 							startSize -= 1;
 							startDate += 1;
 							clearTimeout();
-							setTimeout(recolor, 2000);
+							//setTimeout(recolor, 2000);
 						}
 					}
 				}

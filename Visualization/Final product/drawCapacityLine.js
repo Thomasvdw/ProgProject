@@ -26,8 +26,11 @@ for (var n = 0; n < state_ids.length; n++){
 			q.defer(d3.csv, "\\Data\\PVdata\\annual_generated_kwh_growth\\generated_" + state_ids[i] + ".csv");
 		}
 		q.awaitAll(saveElectricityData);
+		
+		// drawn = 1 when a graph has been drawn, 0 when this is not the case. (only //for line-graph)
+		var drawn = 0;
 			
-			
+		// Variables to store the loaded data in. 
 		var CapacityData;
 		var CostsData;
 		var ElectricityData;
@@ -49,13 +52,15 @@ for (var n = 0; n < state_ids.length; n++){
 		
 		function drawCapacityLine(){
 			
-			d3.selectAll(".third_dropdown").remove();
+			drawn = 0;
+			
+			d3.selectAll("#third_dropdown").remove();
 			d3.selectAll("svg").remove();
 			
 			var container = d3.selectAll("#content");
 			
 			var third_dropdown = container.append("div")
-				.attr("class", "third_dropdown");
+				.attr("id", "third_dropdown");
 			var dropdown = third_dropdown.append("div")
 				.attr("class", "dropdown");
 			var button = dropdown.append("button")
@@ -83,10 +88,8 @@ for (var n = 0; n < state_ids.length; n++){
 					.attr("href", "#" + state_ids[i])
 					.text(state_ids[i]);
 			}
-			//drawSelectedState("CA");
 		}
 		
-		var drawn = 0;
 		function drawSelectedState(state, Data, type){
 						
 			var svg = d3.selectAll("svg").remove()
@@ -103,7 +106,7 @@ for (var n = 0; n < state_ids.length; n++){
 				.range([75, width]);
 					
 			var y = d3.scale.linear()
-				.range([height, 20]);
+				.range([height, 35]);
 					
 			var xAxis = d3.svg.axis()
 				.scale(x)
@@ -157,9 +160,13 @@ for (var n = 0; n < state_ids.length; n++){
 			var getSizes = function(allSizes, state){
 				return allSizes[state];
 			}
+			
+			var selectedStateSizes = getSizes(allSizes, selectedState);
+			
 				
 			for (var i = 0; i < state_ids.length; i++){
 				stateSizes = getSizes(allSizes, state_ids[i]);
+				
 				stateSizes.forEach(function(d) {
 					if (drawn == 0){
 						d.Date = d.Date.replace("1/1/", "01-01-");
@@ -175,12 +182,21 @@ for (var n = 0; n < state_ids.length; n++){
 						}
 					}
 				})
+			
+				if (type == "capacity"){
+					x.domain(d3.extent(selectedStateSizes, function(d) { return d.Date }))
+					y.domain(d3.extent(selectedStateSizes, function(d) { return d.Size; }));
+				}
+				if (type == "electricity"){
+					x.domain(d3.extent(selectedStateSizes, function(d) { return d.Date; }));
+					y.domain(d3.extent(selectedStateSizes, function(d) { return d["Annual generated"]; }));
+				}
 				
+			
+				// Configure axis for costs per kW graph
+				var extentArray = stateSizes;
 				
-				
-				if (state_ids[i] == selectedState){
-					
-					var extentArray = stateSizes;
+				if (type == "costs"){
 					var zero_object = {
 						"Date": parseDate("01-01-2000"),
 						"Cost/size": 0
@@ -193,17 +209,7 @@ for (var n = 0; n < state_ids.length; n++){
 					extentArray.push(max_object);
 					
 					x.domain(d3.extent(stateSizes, function(d) { return d.Date; }));
-					y.domain(d3.extent(extentArray, function(d) { 
-						if (type == "costs"){
-							return d["Cost/size"];
-						}
-						else if (type == "electricity"){
-							return d["Annual generated"];
-						}
-						else {
-							return d.Size; 							
-						}
-					}));
+					y.domain(d3.extent(extentArray, function(d) { return d["Cost/size"];}));
 				}
 				
 				var path = svg.append("path")
@@ -223,7 +229,7 @@ for (var n = 0; n < state_ids.length; n++){
 
 			svg.append("g")
 				.attr("class", "x axis")
-				.attr("transform", "translate(20," + height +")")
+				.attr("transform", "translate(35," + height +")")
 				.call(xAxis);
 					
 			svg.append("g")

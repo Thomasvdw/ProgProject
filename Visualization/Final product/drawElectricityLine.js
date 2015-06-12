@@ -1,11 +1,13 @@
 		function drawElectricityLine(){
 			
-			d3.selectAll(".third_dropdown").remove();
+			drawn = 0;
+			
+			d3.selectAll("#third_dropdown").remove();
 			d3.selectAll("svg").remove();
 			
 			var container = d3.selectAll("#content")
 			var third_dropdown = container.append("div")
-				.attr("class", "third_dropdown");
+				.attr("id", "third_dropdown");
 			var dropdown = third_dropdown.append("div")
 				.attr("class", "dropdown");
 			var button = dropdown.append("button")
