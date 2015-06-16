@@ -47,7 +47,7 @@ def main():
                 generate = generate.replace(';', '.')
                 generate = float(generate)
                 
-                if cost_size > 1000:
+                if cost_size > 1000 and date > "1995":
                     if date < "2015":
                         generate_2015.append(generate)
                     if date < "2014":
@@ -85,74 +85,24 @@ def main():
                     pass
 
         
-        try:
-            generate2015 = sum(generate_2015) / len(generate_2015)
-        except ZeroDivisionError:
-            generate2015 = 0
-        try:
-            generate2014 = sum(generate_2014) / len(generate_2014)
-        except ZeroDivisionError:
-            generate2014 = 0
-        try:
-            generate2013 = sum(generate_2013) / len(generate_2013)
-        except ZeroDivisionError:
-            generate2013 = 0
-        try:
-            generate2012 = sum(generate_2012) / len(generate_2012)
-        except ZeroDivisionError:
-            generate2012 = 0
-        try:
-            generate2011 = sum(generate_2011) / len(generate_2011)
-        except ZeroDivisionError:
-            generate2011 = 0
-        try:
-            generate2010 = sum(generate_2010) / len(generate_2010)
-        except ZeroDivisionError:
-            generate2010 = 0
-        try:
-            generate2009 = sum(generate_2009) / len(generate_2009)
-        except ZeroDivisionError:
-            generate2009 = 0
-        try:
-            generate2008 = sum(generate_2008) / len(generate_2008)
-        except ZeroDivisionError:
-            generate2008 = 0
-        try:
-            generate2007 = sum(generate_2007) / len(generate_2007)
-        except ZeroDivisionError:
-            generate2007 = 0
-        try:
-            generate2006 = sum(generate_2006) / len(generate_2006)
-        except ZeroDivisionError:
-            generate2006 = 0
-        try:
-            generate2005 = sum(generate_2005) / len(generate_2005)
-        except ZeroDivisionError:
-            generate2005 = 0
-        try:
-            generate2004 = sum(generate_2004) / len(generate_2004)
-        except ZeroDivisionError:
-            generate2004 = 0
-        try:
-            generate2003 = sum(generate_2003) / len(generate_2003)
-        except ZeroDivisionError:
-            generate2003 = 0
-        try:
-            generate2002 = sum(generate_2002) / len(generate_2002)
-        except ZeroDivisionError:
-            generate2002 = 0
-        try:
-            generate2001 = sum(generate_2001) / len(generate_2001)
-        except ZeroDivisionError:
-            generate2001 = 0
-        try:
-            generate2000 = sum(generate_2000) / len(generate_2000)
-        except ZeroDivisionError:
-            generate2000 = 0
-        try:
-            generatetotal = sum(generate_total) / len(generate_total)
-        except ZeroDivisionError:
-            generatetotal = 0
+            generate2015 = sum(generate_2015)
+            generate2014 = sum(generate_2014)
+            generate2013 = sum(generate_2013)
+            generate2012 = sum(generate_2012)
+            generate2011 = sum(generate_2011)
+            generate2010 = sum(generate_2010)
+            generate2009 = sum(generate_2009)
+            generate2008 = sum(generate_2008)
+            generate2007 = sum(generate_2007)
+            generate2006 = sum(generate_2006)
+            generate2005 = sum(generate_2005)
+            generate2004 = sum(generate_2004)
+            generate2003 = sum(generate_2003)
+            generate2002 = sum(generate_2002)
+            generate2001 = sum(generate_2001)
+            generate2000 = sum(generate_2000)
+            generatetotal = sum(generate_total)
+
 
         all_generated = [int(generate2015), int(generate2014), int(generate2013), int(generate2012),
                      int(generate2011), int(generate2010), int(generate2009), int(generate2008),

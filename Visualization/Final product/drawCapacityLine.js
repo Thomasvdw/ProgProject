@@ -1,4 +1,4 @@
-
+// Variables that are used in all d3 javascript files
 var state_ids = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
 
 var state_names = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
@@ -8,7 +8,7 @@ var state_ids_to_names = {}
 for (var n = 0; n < state_ids.length; n++){
 	state_ids_to_names[state_ids[n]] = state_names[n];
 }
-		
+		// Load data
 		var q = queue(1);
 		for (var i = 0; i < state_ids.length; i++){
 			q.defer(d3.csv, "\\Data\\PVdata\\population_energy_growth\\solar_size\\solar_size_" + state_ids[i] + ".csv");
@@ -27,7 +27,7 @@ for (var n = 0; n < state_ids.length; n++){
 		}
 		q.awaitAll(saveElectricityData);
 		
-		// drawn = 1 when a graph has been drawn, 0 when this is not the case. (only //for line-graph)
+		// drawn = 1 when a graph has been drawn, 0 when this is not the case. (only for line-graph)
 		var drawn = 0;
 			
 		// Variables to store the loaded data in. 
@@ -86,8 +86,9 @@ for (var n = 0; n < state_ids.length; n++){
 					.attr("role", "menuitem")
 					.attr("tabindex", "-1")
 					.attr("href", "#" + state_ids[i])
-					.text(state_ids[i]);
+					.text(state_ids_to_names[state_ids[i]]);
 			}
+			drawSelectedState("AL", CapacityData, "capacity")
 		}
 		
 		function drawSelectedState(state, Data, type){
@@ -101,6 +102,7 @@ for (var n = 0; n < state_ids.length; n++){
 				height = 500 - margin.top - margin.bottom;
 					
 			var parseDate = d3.time.format("%d-%m-%Y").parse;
+				bisectDate = d3.bisector(function(d) {return d.Date;}).left;
 				
 			var x = d3.time.scale()
 				.range([75, width]);
@@ -114,7 +116,13 @@ for (var n = 0; n < state_ids.length; n++){
 				
 			var yAxis = d3.svg.axis()
 				.scale(y)
-				.orient("left");
+				.orient("left")
+				
+			allSizes = {}
+				
+			Data.forEach(function(d, i) {
+				allSizes[state_ids[i]] = d;
+			});
 				
 			var line = d3.svg.line()
 				.x(function(d) { 
@@ -142,19 +150,6 @@ for (var n = 0; n < state_ids.length; n++){
 			svg.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 				
-			svg.append("text")
-				.attr("x", (width / 2))             
-				.attr("y", 20)
-				.attr("text-anchor", "middle")  
-				.style("font-size", "16px") 
-				.text(state_ids_to_names[selectedState] + " capacity growth compared to other states");
-				
-			allSizes = {}
-				
-			Data.forEach(function(d, i) {
-				allSizes[state_ids[i]] = d
-			});
-				
 			// allSizes contains following: allSizes[state code (2 letters)] = object of length 17 with for each the size and the date
 				
 			var getSizes = function(allSizes, state){
@@ -162,17 +157,22 @@ for (var n = 0; n < state_ids.length; n++){
 			}
 			
 			var selectedStateSizes = getSizes(allSizes, selectedState);
-			
 				
 			for (var i = 0; i < state_ids.length; i++){
 				stateSizes = getSizes(allSizes, state_ids[i]);
+				stateData = [];
 				
-				stateSizes.forEach(function(d) {
-					if (drawn == 0){
+				stateSizes.forEach(function(d, j) {
+					if (drawn == 0 && typeof d.Date == "string"){
 						d.Date = d.Date.replace("1/1/", "01-01-");
 						d.Date = parseDate(d.Date);
+						
 						if (type == "costs"){
-							d["Cost/size"] = +d["Cost/size"];
+							d["Cost/size"] = parseFloat(d["Cost/size"]);
+							if (d["Cost/size"] <= 0 || d["Cost/size"] > 21000 || d.Date == "total"){
+								console.log("date:", d.Date,"price: ", d["Cost/size"])
+								stateSizes.splice(j, 1);
+							}
 						}
 						else if (type == "electricity"){
 							d["Annual generated"] = +d["Annual generated"];
@@ -182,20 +182,27 @@ for (var n = 0; n < state_ids.length; n++){
 						}
 					}
 				})
+				
+				var extentArray = selectedStateSizes;
 			
+				// Configure axis for capacity graph
 				if (type == "capacity"){
+					var zero_object = {
+						"Date": parseDate("01-01-2000"),
+						"Size": 0
+					}
+					extentArray.push(zero_object);
 					x.domain(d3.extent(selectedStateSizes, function(d) { return d.Date }))
-					y.domain(d3.extent(selectedStateSizes, function(d) { return d.Size; }));
+					y.domain(d3.extent(extentArray, function(d) { return d.Size; }));
 				}
 				if (type == "electricity"){
 					x.domain(d3.extent(selectedStateSizes, function(d) { return d.Date; }));
 					y.domain(d3.extent(selectedStateSizes, function(d) { return d["Annual generated"]; }));
 				}
 				
+				var extentArray = stateSizes;
 			
 				// Configure axis for costs per kW graph
-				var extentArray = stateSizes;
-				
 				if (type == "costs"){
 					var zero_object = {
 						"Date": parseDate("01-01-2000"),
@@ -212,16 +219,43 @@ for (var n = 0; n < state_ids.length; n++){
 					y.domain(d3.extent(extentArray, function(d) { return d["Cost/size"];}));
 				}
 				
+				// Create pinpoint class for each path
+				var pinpoint = svg.append("g")
+					.attr("class", "pinpoint")
+					.style("display", "none");
+				
+				pinpoint.append("text")
+					.attr("x", 9)
+					.attr("dy", ".35em");
+					
+				
+					
 				var path = svg.append("path")
 					path.datum(stateSizes)
 					path.attr("class", "line")
-					path.transition()
+					path.attr("id", state_ids[i])
 					path.attr("d", line)
+					path.on("mousemove", function(d){
+						d3.selectAll("#mouseover_state").remove()
+						legend.append("text")
+						.attr("id", "mouseover_state")
+						.attr("x", (width / 2))
+						.attr("y", 52)
+						.attr("text-anchor", "middle") 
+						.style("font-size", "13px") 
+						.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+						.text("Select state: " + state_ids_to_names[this.id])
+					})
+					path.on("click", function(d){
+						drawSelectedState(this.id, Data, type);
+					})
 					path.attr("stroke", "steelblue")
 				if (state_ids[i] == selectedState){
-					path.attr("stroke-width", "2.5px");
+					path.attr("stroke-width", "2.5px")
+					path.attr("stroke", "red");
 				}
 				else {
+					path.attr("stroke-width", "1.5px")
 					path.attr("opacity", "0.5")
 				}
 			}
@@ -236,6 +270,55 @@ for (var n = 0; n < state_ids.length; n++){
 				.attr("class", "y axis")
 				.attr("transform", "translate(75, 0)")
 				.call(yAxis);
+				
+			var legend = svg.append("g")
+				legend.append("rect")
+					.attr("x", 73)
+					.attr("y", 0)
+					.attr("width", width - 75)
+					.attr("height", 32)
+					.attr("fill", "white")
+				
+				legend.append("rect")
+					.attr("x", (width - 250) / 2)
+					.attr("y", 32)
+					.attr("width", 250)
+					.attr("height", 32)
+					.attr("fill", "white")
+					
+					
+			legend.append("text")
+				.attr("x", (width / 2))             
+				.attr("y", 20)
+				.attr("text-anchor", "middle")  
+				.style("font-size", "16px") 
+				.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+				.attr("font-style", "italic")
+				.text(function(){
+					if (type == "costs"){
+						var end_size = allSizes[selectedState][0]["Cost/size"],		
+							begin_size = allSizes[selectedState][15]["Cost/size"], 
+							years = 15,
+							growth = end_size - begin_size,
+							annual_growth = parseFloat(growth) / years;
+						
+						if (begin_size == 0){
+							begin_size = "-";
+						}
+						return state_ids_to_names[selectedState] + "'s average price per kW changed from " + begin_size + " $/kW to " + end_size + " $/kW in " + years + " years";
+					}
+					else if (type == "electricity"){
+						return state_ids_to_names[selectedState] + " annual generated electricity compared to other states";
+					}
+					else {
+						var end_size = allSizes[selectedState][0].Size,
+							begin_size = allSizes[selectedState][15].Size,
+							years = 15,
+							growth = end_size - begin_size,
+							annual_growth = parseFloat(growth) / years;
+						return state_ids_to_names[selectedState] + "'s capacity grew from " + begin_size + " MW to " + end_size + " MW in " + years + " years, by " + String(annual_growth).substr(0,5) + " MW per year on average.";
+					}
+				})
 			svg.append("text")
 				.attr("transform", "rotate(-90)")
 				.attr("y", 86)
@@ -253,5 +336,7 @@ for (var n = 0; n < state_ids.length; n++){
 							return "Total capacity (kW)"							
 						}
 				});
+			
+
 		}
 	

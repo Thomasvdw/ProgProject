@@ -33,7 +33,7 @@
 					.attr("role", "menuitem")
 					.attr("tabindex", "-1")
 					.attr("href", "#" + state_ids[i])
-					.text(state_ids[i]);
+					.text(state_ids_to_names[state_ids[i]]);
 			}
-			//drawSelectedState("CA");
+			drawSelectedState("AL", CostsData, "costs")
 		}

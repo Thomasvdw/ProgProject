@@ -1,10 +1,11 @@
 		function drawUScostsmap(){
-			d3.selectAll(".third_dropdown").remove()
+			d3.selectAll("#third_dropdown").remove()
 			var svg = d3.selectAll("svg").remove()
 	
 			var q = queue(1);
 			for (var i = 0; i < state_ids.length; i++){
 				q.defer(d3.csv, "\\Data\\PVdata\\normalized_costs_growth\\cost_per_size\\cost_per_size_" + state_ids[i] + ".csv");
+				q.defer(d3.csv, "\\Data\\PVdata\\population_energy_growth\\population_size\\" + state_ids[i] + "_population.csv");
 			}
 			q.awaitAll(drawMap);
 			
@@ -14,8 +15,8 @@
 				height = 500;
 				
 			var projection = d3.geo.albersUsa()
-				.scale(1000)
-				.translate([width / 2, (height + 150) / 2]);
+				.scale(900)
+				.translate([width / 2 + 50, (height - 80) / 2]);
 
 			var path = d3.geo.path()
 				.projection(projection);
@@ -31,30 +32,86 @@
 
 			var svg = d3.select("body").append("svg")
 				.attr("width", width)
-				.attr("height", height + 150)
+				.attr("height", height)
 				.attr("class", "center-block");
 			
+			// insert Title
 			svg.append("text")
 				.attr("x", (width / 2))             
-				.attr("y", 130)
+				.attr("y", 20)
 				.attr("text-anchor", "middle")  
 				.style("font-size", "16px") 
-				.text("US states PV costs per kW change");
-							
+				.text("US states PV costs per kW");
+			
+			// Insert rectangle to show data in, add legend title, add buttons
 			var data_reference = svg.insert("g");
 				data_reference.append("rect")
-					.attr("x", (width / 2) - 75)
-					.attr("y", 10)
+					.attr("x", 120)
+					.attr("y", 30)
 					.attr("width", 150)
-					.attr("height", 100)
+					.attr("height", 230)
 					.attr("stroke", "black")
 					.attr("fill", "transparent")
+				data_reference.append("text")
+					.text("Legend & data")
+					.attr("x", 121)
+					.attr("y", 22)
+					.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+					.attr("font-size", "16");
+				data_reference.append("svg:image")
+					.attr("class", "next-button")
+					.attr("x", 230)
+					.attr("y", 270)
+					.attr("width", 30)
+					.attr("height", 29)
+					.attr("xlink:href", "images/next.png");
+				data_reference.append("svg:image")
+					.attr("class", "previous-button")
+					.attr("x", 130)
+					.attr("y", 270)
+					.attr("width", 30)
+					.attr("height", 29)
+					.attr("xlink:href", "images/previous.png");
+					
+				var texts = ["Year", "State: ", "Costs/kW: ", "Population: "];
+						
+				for (var j = 0; j < texts.length; j++){
+					data_reference.append("text")
+						.attr("class", "legend_text")
+						.text(texts[j])
+						.attr("x", 125)
+						.attr("y", 45 + 23 * j)
+						.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+						.attr("font-size", "10");
+				}
+				
+				var colors = ["#edf8fb","#ccece6","#99d8c9","#66c2a4","#2ca25f","#006d2c"]
+				var colors_legend = ["0 MW:","1 - 99 MW:", "100 - 999 MW:", "1000 - 9999 MW:", "10.000 - 99.999 MW:", "100.000+ MW:"]
+				for (var i = 0; i < colors.length; i++){
+					data_reference.append("text")
+						.attr("class", "legend")
+						.text(colors_legend[i])
+						.attr("x", 125)
+						.attr("y", 135 + 20 * i)
+						.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+						.attr("font-size", "10");
+					data_reference.append("rect")
+						.attr("class", "legend")
+						.attr("x", 230)
+						.attr("y", 127 + 20 * i)
+						.attr("width", 10)
+						.attr("height", 10)
+						.attr("stroke", "black")
+						.attr("fill", colors[i]);
+						
+				}
 
+			// Insert rectangle to point to current shown year	
 			var current_date_rect = svg.insert("g");
 				current_date_rect.append("rect")
 					.attr("class", "date_rect")
 					.attr("x", 95)
-					.attr("y", 580)
+					.attr("y", 435)
 					.attr("width", 10)
 					.attr("height", 10)
 					.attr("stroke", "black")
@@ -62,7 +119,7 @@
 			
 			svg.append("g")
 				.attr("class", "x axis")
-				.attr("transform", "translate(0,600)")
+				.attr("transform", "translate(0,450)")
 				.call(xAxis);
 			
 
@@ -74,10 +131,14 @@
 					var nameCodes = {};
 					var fullNames = {};
 					var nameSize = {};
+					var namePopulation = {};
+					var x = 0;
 					csv.forEach(function(d,i){
 						fullNames[d.id] = d.name;
 						nameCodes[d.id] = d.code;
-						nameSize[d.code] = allData[i];
+						nameSize[d.code] = allData[x];
+						namePopulation[d.code] = allData[x + 1];
+						x += 2;
 					});
 					
 					/* Get max of costs
@@ -103,44 +164,53 @@
 					.attr("d", path)
 					.attr("stroke", "black")
 					.on("mouseover", function(d) {
-						var texts = ["State: ", "Growth: ", "Capacity: "];
-						
+
 						d3.selectAll(".text").remove()
-						for (var j = 0; j < texts.length; j++){
-							data_reference.append("text")
-								.attr("class", "text")
-								.text(texts[j])
-								.attr("x", (width / 2) - 75)
-								.attr("y", 22.5 + 23 * j)
-								.attr("font-family", "Verdana")
-								.attr("font-size", "12.5");
-						}
 						
-						/*
-						var growth = parseFloat((parseFloat(parseFloat(nameSize[nameCodes[d.id]][15].Size) - parseFloat(nameSize[nameCodes[d.id]][16].Size))/parseFloat(nameSize[nameCodes[d.id]][16].Size)));
-						var popup_texts = [fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][15].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][19].Population) + " mln"];
+						var population = parseFloat(namePopulation[nameCodes[d.id]][19].Population)
+						if (population > 450){
+							population = population / 1000;
+						}
+						population = String(population).substr(0,5);
+						
+						costs = parseFloat(nameSize[nameCodes[d.id]][15]["Cost/size"])
+						
+						var popup_texts = [nameSize[nameCodes[d.id]][15].Date, fullNames[d.id], costs + " $/kW", population + " mln"];
 							
 						for (var i = 0; i < popup_texts.length; i++){
 							data_reference.append("text")
 								.text(popup_texts[i])
-								.attr("x", (width / 2) - 75 + 70)
-								.attr("y", 22.5 + 23 * i)
-								.attr("font-family", "Verdana")
-								.attr("font-size", "12.5");
+								.attr("class", "text")
+								.attr("x", 125 + 70)
+								.attr("y", 45 + 23 * i)
+								.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+								.attr("font-size", "10");
 						}
-						*/
+						
 					})
 					.attr("class", function(d,i) { 
 						return nameCodes[d.id];
 					})
-					.attr("fill", "#f7fcfd");
+					.attr("fill", "#f7fcfd"); // TODO: starting coloring
 				
-				setTimeout(recolor, 2500);
+				//setTimeout(recolor, 2500);
 				
 				var startSize = 14;
-				var normal = startSize;
+				var startDate = 20;
 				var startRect = 95;
-				var stepRect = 60;			
+				var stepRect = 60;
+
+				d3.selectAll(".next-button")
+					.on("click", recolor);
+					
+				d3.selectAll(".previous-button")
+					.on("click", previous_recolor);
+				
+				function previous_recolor(){
+					startSize += 2;
+					startDate -= 2;
+					recolor();
+				}
 				
 				function recolor(){
 					
@@ -148,6 +218,7 @@
 						
 						d3.selectAll(".date_rect")
 							.transition()
+							.duration(500)
 							.attr("x", startRect + (stepRect * (15 - startSize)));
 					
 						svg.append("g")
@@ -158,57 +229,37 @@
 						.append("path")
 						.attr("d", path)
 						.on("mouseover", function(d) {
-													
-							var texts = ["State: ", "Growth: ", "Capacity: ", "Population: "];
+												
 							d3.selectAll(".text").remove()
-							for (var j = 0; j < texts.length; j++){
-								var font_size = "12.5";
-								if (i == 3){
-									font_size = "11";
-								}
-								data_reference.append("text")
-									.attr("class", "text")
-									.text(texts[j])
-									.attr("x", (width / 2) - 75)
-									.attr("y", 22.5 + 23 * j)
-									.attr("font-family", "Verdana")
-									.attr("font-size", font_size);
+							
+							var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population)
+							if (population > 450){
+								population = population / 1000;
 							}
-							/* 
-							var size = parseFloat(nameSize[nameCodes[d.id]][startSize].Size);
-							var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population);
-							var size_before = parseFloat(nameSize[nameCodes[d.id]][startSize + 1].Size);
-							var size_difference = parseFloat(size - size_before);
-							var growth = parseFloat(size_difference / size_before);
+							population = String(population).substr(0,5);
 							
-							var popup_texts = [fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][startSize].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][startDate].Population) + " mln"];
+							costs = parseFloat(nameSize[nameCodes[d.id]][startSize]["Cost/size"])
 							
+							var popup_texts = [nameSize[nameCodes[d.id]][startSize + 1].Date, fullNames[d.id], costs + " $/kW", population + " mln"];
+								
 							for (var i = 0; i < popup_texts.length; i++){
-								var j = 0;
-								var font_size = "12.5";
-								if (i == 0){
-									j -= 20
-								}
-								if (i == 3){
-									j += 10;
-									font_size = "11";
-								}
 								data_reference.append("text")
 									.text(popup_texts[i])
-									.attr("x", (width / 2) - 75 + 70 + j)
-									.attr("y", 22.5 + 23 * i)
-									.attr("font-family", "Verdana")
-									.attr("font-size", font_size);
-								j = 0;
-							}
-							*/
+									.attr("class", "text")
+									.attr("x", 125 + 70)
+									.attr("y", 45 + 23 * i)
+									.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+									.attr("font-size", "10");
+							}	
 						})
 						.attr("stroke", "black")
 						.attr("fill", function(d,i) {
 							if (nameSize[nameCodes[d.id]] != undefined){
 								
+								// TODO: Decide on coloring! 
+								
 								var size = parseFloat(nameSize[nameCodes[d.id]][startSize]["Cost/size"]);
-								var size_normal = parseFloat(nameSize[nameCodes[d.id]][normal]["Cost/size"]);
+								var size_normal = parseFloat(nameSize[nameCodes[d.id]][15]["Cost/size"]);
 								var size_difference = parseFloat(size - size_normal);
 								var growth = parseFloat(size_difference / size_normal);		
 								
@@ -228,7 +279,6 @@
 						if (startSize != 0){
 							startSize -= 1;
 							clearTimeout();
-							setTimeout(recolor, 1000);
 						}
 					}
 				}

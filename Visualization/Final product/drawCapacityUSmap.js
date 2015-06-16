@@ -10,8 +10,7 @@
 
 		// Draw map of capacity growth, after loading the capacity growth data. 
 		function drawUSmap(){
-			d3.selectAll(".third_dropdown").remove()
-			d3.selectAll(".second_dropdown").remove()
+			d3.selectAll("#third_dropdown").remove()
 			var svg = d3.selectAll("svg").remove()
 	
 			var q = queue(1);
@@ -49,13 +48,12 @@
 				.attr("class", "center-block");
 				
 			// insert Title
-			/*
 			svg.append("text")
 				.attr("x", (width / 2))             
-				.attr("y", 130)
+				.attr("y", 20)
 				.attr("text-anchor", "middle")  
 				.style("font-size", "16px") 
-				.text("US states PV capacity growth");*/
+				.text("US states PV capacity growth");
 			
 			// Insert rectangle to show data in. 
 			var data_reference = svg.insert("g");
@@ -63,7 +61,7 @@
 					.attr("x", 120)
 					.attr("y", 30)
 					.attr("width", 150)
-					.attr("height", 200)
+					.attr("height", 230)
 					.attr("stroke", "black")
 					.attr("fill", "transparent")
 				data_reference.append("text")
@@ -74,18 +72,52 @@
 					.attr("font-size", "16");
 				data_reference.append("svg:image")
 					.attr("class", "next-button")
-					.attr("x", 235)
-					.attr("y", 195)
+					.attr("x", 230)
+					.attr("y", 270)
 					.attr("width", 30)
 					.attr("height", 29)
 					.attr("xlink:href", "images/next.png");
 				data_reference.append("svg:image")
 					.attr("class", "previous-button")
-					.attr("x", 125)
-					.attr("y", 195)
+					.attr("x", 130)
+					.attr("y", 270)
 					.attr("width", 30)
 					.attr("height", 29)
 					.attr("xlink:href", "images/previous.png");
+					
+				var texts = ["Year: ", "State: ", "Capacity: ", "Population: "];
+						
+						
+				for (var j = 0; j < texts.length; j++){
+					data_reference.append("text")
+						.attr("class", "legend_text")
+						.text(texts[j])
+						.attr("x", 125)
+						.attr("y", 45 + 23 * j)
+						.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+						.attr("font-size", "10");
+				}
+				
+				var colors = ["#edf8fb","#ccece6","#99d8c9","#66c2a4","#2ca25f","#006d2c"]
+				var colors_legend = ["0 MW:","1 - 99 MW:", "100 - 999 MW:", "1000 - 9999 MW:", "10.000 - 99.999 MW:", "100.000+ MW:"]
+				for (var i = 0; i < colors.length; i++){
+					data_reference.append("text")
+						.attr("class", "legend")
+						.text(colors_legend[i])
+						.attr("x", 125)
+						.attr("y", 135 + 20 * i)
+						.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
+						.attr("font-size", "10");
+					data_reference.append("rect")
+						.attr("class", "legend")
+						.attr("x", 230)
+						.attr("y", 127 + 20 * i)
+						.attr("width", 10)
+						.attr("height", 10)
+						.attr("stroke", "black")
+						.attr("fill", colors[i]);
+						
+				}
 			
 			// Insert rectangle to point to current shown year
 			var current_date_rect = svg.insert("g");
@@ -146,23 +178,19 @@
 					.attr("d", path)
 					.attr("stroke", "black")
 					.on("mouseover", function(d) {
-						var texts = ["Year: ", "State: ", "Growth: ", "Capacity: ", "Population: "];
-						
-						d3.selectAll(".text").remove()
-						for (var j = 0; j < texts.length; j++){
-							data_reference.append("text")
-								.attr("class", "text")
-								.text(texts[j])
-								.attr("x", 125)
-								.attr("y", 45 + 23 * j)
-								.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
-								.attr("font-size", "10");
-						}
-						
-						
 
-						var growth = parseFloat((parseFloat(parseFloat(nameSize[nameCodes[d.id]][15].Size) - parseFloat(nameSize[nameCodes[d.id]][16].Size))/parseFloat(nameSize[nameCodes[d.id]][16].Size)));
-						var popup_texts = [nameSize[nameCodes[d.id]][15].Date, fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][15].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][19].Population) + " mln"];
+						d3.selectAll(".text").remove()
+						
+						var population = parseFloat(namePopulation[nameCodes[d.id]][19].Population)
+						if (population > 450){
+							population = population / 1000;
+						}
+						population = String(population).substr(0,5);
+						
+						var popup_texts = [nameSize[nameCodes[d.id]][15].Date,
+											fullNames[d.id],
+											parseFloat(nameSize[nameCodes[d.id]][15].Size) + " MW",
+											population + " mln"];
 							
 						for (var i = 0; i < popup_texts.length; i++){
 							data_reference.append("text")
@@ -177,7 +205,31 @@
 					.attr("class", function(d,i) { 
 						return nameCodes[d.id];
 					})
-					.attr("fill", "#f7fcfd");
+					.attr("fill", function(d) {
+						if (nameSize[nameCodes[d.id]] != undefined){
+							var size = parseFloat(nameSize[nameCodes[d.id]][15].Size);
+
+							if (size == 0){
+								return "#edf8fb"
+							}
+							if (size < 100){
+								return "#ccece6" 
+							}
+							if (size < 1000){
+								return "#99d8c9"
+							}
+							if (size < 10000){
+								return "#66c2a4"
+							}
+							if (size < 100000){
+								return "#2ca25f"
+							}
+							if (size < 1000000){
+								return "#006d2c"
+							}
+						}
+						return "#edf8fb";
+					});
 				
 				//setTimeout(recolor, 2500);
 				
@@ -188,6 +240,15 @@
 				
 				d3.selectAll(".next-button")
 					.on("click", recolor);
+					
+				d3.selectAll(".previous-button")
+					.on("click", previous_recolor);
+				
+				function previous_recolor(){
+					startSize += 2;
+					startDate -= 2;
+					recolor();			
+				}
 				
 				function recolor(){
 					
@@ -195,6 +256,7 @@
 						
 						d3.selectAll(".date_rect")
 							.transition()
+							.duration(500)
 							.attr("x", startRect + (stepRect * (15 - startSize)));
 						
 					
@@ -205,31 +267,23 @@
 						.enter()
 						.append("path")
 						.attr("d", path)
-						.on("mouseover", function(d) {
-													
-							var texts = ["Year: ", "State: ", "Growth: ", "Capacity: ", "Population: "];
+						.on("mouseover", function(d) {				
+
 							d3.selectAll(".text").remove()
-							for (var j = 0; j < texts.length; j++){
-								data_reference.append("text")
-									.attr("class", "text")						
-									.text(texts[j])
-									.attr("x", 125)
-									.attr("y", 45 + 23 * j)
-									.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
-									.attr("font-size", "10");
-							}
 							
 							var size = parseFloat(nameSize[nameCodes[d.id]][startSize].Size);
 							var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population);
-							var size_before = parseFloat(nameSize[nameCodes[d.id]][startSize + 1].Size);
-							var size_difference = parseFloat(size - size_before);
-							var growth = parseFloat(size_difference / size_before);
 							
-							var popup_texts = [nameSize[nameCodes[d.id]][startSize + 1].Date, fullNames[d.id], String(growth * 100).substr(0,5) + " %", parseFloat(nameSize[nameCodes[d.id]][startSize].Size) + " MW", parseFloat(namePopulation[nameCodes[d.id]][startDate].Population) + " mln"];
+							if (population > 450){
+								population = population / 1000;
+							}
+							population = String(population).substr(0,5);
+							
+							var popup_texts = [nameSize[nameCodes[d.id]][startSize + 1].Date, fullNames[d.id], size + " MW", population + " mln"];
 							
 							for (var i = 0; i < popup_texts.length; i++){
 								data_reference.append("text")
-									.attr("class", "text")		
+									.attr("class", "text")
 									.text(popup_texts[i])
 									.attr("x", 125 + 70)
 									.attr("y", 45 + 23 * i)
@@ -241,42 +295,42 @@
 						.attr("fill", function(d,i) {
 							if (nameSize[nameCodes[d.id]] != undefined){
 								
-								var normalSize = 14;
-								var normal = parseFloat(nameSize[nameCodes[d.id]][normalSize].Size);
-								
-								while (normal == 0){
-									normalSize -= 1;
-									if (normalSize < 0){
-										break;
-									}
-									normal = parseFloat(nameSize[nameCodes[d.id]][normalSize].Size);
-								}
-								
-								// Divide current capacity by highest global capacity (of all states)
+								/* Coloring: 
+								- 0 : 0
+								- 1 - 99 MW: 1
+								- 100 - 999 MW: 2
+								- 1000 - 9999 MW: 3
+								- 10000 - 99999 MW: 4
+								- 100.000 + MW: 5
+								*/
 								var size = parseFloat(nameSize[nameCodes[d.id]][startSize].Size);
-								var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population);
-								
-								var size_difference = parseFloat(size - normal);
-								var growth = parseFloat(size_difference / normal);		
-								
-								if (isNaN(growth)){
-									growth = 0;
-								}
-								
-								if (growth > 1){
-									growth = 1;
-								}
 
-								return d3.interpolate("#f7fcfd", "#00441b")(growth);
+								
+								if (size == 0){
+									return "#edf8fb"
+								}
+								if (size < 100){
+									return "#ccece6" 
+								}
+								if (size < 1000){
+									return "#99d8c9"
+								}
+								if (size < 10000){
+									return "#66c2a4"
+								}
+								if (size < 100000){
+									return "#2ca25f"
+								}
+								if (size < 1000000){
+									return "#006d2c"
+								}
 							}
-							var growth = 0;
-							return d3.interpolate("#f7fcfd", "#00441b")(growth);
+							return d3.interpolate("#edf8fb", "#006d2c")*0;
 						});
 						if (startSize != 0){
 							startSize -= 1;
 							startDate += 1;
 							clearTimeout();
-							//setTimeout(recolor, 2000);
 						}
 					}
 				}
