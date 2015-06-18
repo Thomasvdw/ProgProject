@@ -44,7 +44,7 @@ def main():
                 cost = row[10]
                 cost = cost.replace(';', '.')
                 cost = float(cost) 
-                if cost > 2000:
+                if cost > 2000 and cost < 30000:
                     if date < "2015":
                         cost_2015.append(cost)
                     if date < "2014":

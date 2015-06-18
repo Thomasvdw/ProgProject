@@ -88,10 +88,31 @@ for (var n = 0; n < state_ids.length; n++){
 					.attr("href", "#" + state_ids[i])
 					.text(state_ids_to_names[state_ids[i]]);
 			}
+			
+			$(".dropdown-menu li a").click(function(){
+				$(this).parents("#third_dropdown").find('.btn').text($(this).text());
+				$(this).parents("#third_dropdown").find('.btn').val($(this).text());
+			});
+			
 			drawSelectedState("AL", CapacityData, "capacity")
 		}
 		
 		function drawSelectedState(state, Data, type){
+			
+			if (Data == undefined){
+				svg = d3.selectAll("svg").remove()
+				
+				if (type == "costs"){
+					setTimeout(function(){drawSelectedState(state, CostsData, type)}, 2500);
+				}
+				else if (type == "electricity"){
+					setTimeout(function(){drawSelectedState(state, ElectricityData, type)}, 2500);
+				}
+				else {
+					setTimeout(function(){drawSelectedState(state, CapacityData, type)}, 2500);
+				}	
+			}
+			else {
 						
 			var svg = d3.selectAll("svg").remove()
 			
@@ -162,36 +183,37 @@ for (var n = 0; n < state_ids.length; n++){
 				stateSizes = getSizes(allSizes, state_ids[i]);
 				stateData = [];
 				
+				
+				// Check here if stateSizes is NOT undefined
 				stateSizes.forEach(function(d, j) {
-					if (drawn == 0 && typeof d.Date == "string"){
+						if (drawn == 0 && typeof d.Date == "string"){
 						d.Date = d.Date.replace("1/1/", "01-01-");
 						d.Date = parseDate(d.Date);
-						
+						}
 						if (type == "costs"){
 							d["Cost/size"] = parseFloat(d["Cost/size"]);
-							if (d["Cost/size"] <= 0 || d["Cost/size"] > 21000 || d.Date == "total"){
-								console.log("date:", d.Date,"price: ", d["Cost/size"])
-								stateSizes.splice(j, 1);
+							if (d["Cost/size"] > 0 && d["Cost/size"] < 21000 && d.Date != null){
+								stateData.push(d);
 							}
 						}
 						else if (type == "electricity"){
 							d["Annual generated"] = +d["Annual generated"];
+							if (d["Annual generated"] > 0 && d.Date != null){
+								stateData.push(d);
+							}
 						}
 						else {
 							d.Size = +d.Size;
+							if (d.Size > 0 && d.Date != null){
+								stateData.push(d);
+							}
 						}
-					}
-				})
+				});
 				
 				var extentArray = selectedStateSizes;
 			
 				// Configure axis for capacity graph
 				if (type == "capacity"){
-					var zero_object = {
-						"Date": parseDate("01-01-2000"),
-						"Size": 0
-					}
-					extentArray.push(zero_object);
 					x.domain(d3.extent(selectedStateSizes, function(d) { return d.Date }))
 					y.domain(d3.extent(extentArray, function(d) { return d.Size; }));
 				}
@@ -200,7 +222,7 @@ for (var n = 0; n < state_ids.length; n++){
 					y.domain(d3.extent(selectedStateSizes, function(d) { return d["Annual generated"]; }));
 				}
 				
-				var extentArray = stateSizes;
+				var extentArray = stateSizes.slice();
 			
 				// Configure axis for costs per kW graph
 				if (type == "costs"){
@@ -219,19 +241,8 @@ for (var n = 0; n < state_ids.length; n++){
 					y.domain(d3.extent(extentArray, function(d) { return d["Cost/size"];}));
 				}
 				
-				// Create pinpoint class for each path
-				var pinpoint = svg.append("g")
-					.attr("class", "pinpoint")
-					.style("display", "none");
-				
-				pinpoint.append("text")
-					.attr("x", 9)
-					.attr("dy", ".35em");
-					
-				
-					
 				var path = svg.append("path")
-					path.datum(stateSizes)
+					path.datum(stateData)
 					path.attr("class", "line")
 					path.attr("id", state_ids[i])
 					path.attr("d", line)
@@ -255,7 +266,7 @@ for (var n = 0; n < state_ids.length; n++){
 					path.attr("stroke", "red");
 				}
 				else {
-					path.attr("stroke-width", "1.5px")
+					path.attr("stroke-width", "2px")
 					path.attr("opacity", "0.5")
 				}
 			}
@@ -330,7 +341,7 @@ for (var n = 0; n < state_ids.length; n++){
 							return "Average price of solar panels ($ per kW)";
 						}
 						else if (type == "electricity"){
-							return "Generated Electricity per year (kWh)";
+							return "Generated Electricity per year (MWh)";
 						}
 						else {
 							return "Total capacity (kW)"							
@@ -338,5 +349,6 @@ for (var n = 0; n < state_ids.length; n++){
 				});
 			
 
+		}
 		}
 	

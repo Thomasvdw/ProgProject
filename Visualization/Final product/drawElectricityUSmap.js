@@ -72,6 +72,13 @@
 					.attr("width", 30)
 					.attr("height", 29)
 					.attr("xlink:href", "images/previous.png");
+				data_reference.append("svg:image")
+					.attr("class", "play-button")
+					.attr("x", 180)
+					.attr("y", 270)
+					.attr("width", 30)
+					.attr("height", 29)
+					.attr("xlink:href", "images/play.png");
 					
 				var texts = ["Year: ", "State: ", "Electricity: ", "Population"];
 							
@@ -204,6 +211,15 @@
 					
 				d3.selectAll(".previous-button")
 					.on("click", previous_recolor);		
+					
+				d3.selectAll(".play-button")
+					.on("click", play_recolor);
+				
+				function play_recolor(){
+					recolor();
+					clearTimeout();
+					setTimeout(play_recolor, 2500);
+				}
 
 				function previous_recolor(){
 					startSize += 2;

@@ -38,6 +38,11 @@ def main():
             reader = csv.reader(csvfile, delimiter = ",")
             next(csvfile)
             for row in reader:
+                size = row[2]
+                size = size.replace(';', '')
+                size = size.replace('.', '')
+                size = float(size)
+                
                 date = str(row[4])
                 date = date[-4:]
                 
@@ -46,9 +51,10 @@ def main():
                 generate = row[11]
                 generate = generate.replace(';', '.')
                 generate = float(generate)
+                generate = generate / 1000
                 
-                if cost_size > 1000 and date > "1995":
-                    if date < "2015":
+                if cost_size > 1000 and date > "1995" and size < 1000:
+                    if date <= "2015":
                         generate_2015.append(generate)
                     if date < "2014":
                         generate_2014.append(generate)
@@ -116,6 +122,7 @@ def main():
                  '1/1/2011', '1/1/2010', '1/1/2009', '1/1/2008',
                  '1/1/2007', '1/1/2006', '1/1/2005', '1/1/2004',
                  '1/1/2003', '1/1/2002', '1/1/2001', '1/1/2000', "total"]
+                 
         
     
     for x, file in enumerate(os.listdir("reformatted/")):

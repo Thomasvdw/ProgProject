@@ -4,10 +4,15 @@
 }
 
 #third_dropdown {
-	/*float: left;*/
 	margin-left:auto;
 	margin-right:auto;
-	width: 10%;
+	width: 20%;
+}
+
+#content {
+	margin-left: auto;
+	margin-right: auto;
+	width: 40%;
 }
 
 svg {

@@ -35,5 +35,11 @@
 					.attr("href", "#" + state_ids[i])
 					.text(state_ids_to_names[state_ids[i]]);
 			}
+			
+			$(".dropdown-menu li a").click(function(){
+				$(this).parents("#third_dropdown").find('.btn').text($(this).text());
+				$(this).parents("#third_dropdown").find('.btn').val($(this).text());
+			});
+			
 			drawSelectedState("AL", CostsData, "costs")
 		}

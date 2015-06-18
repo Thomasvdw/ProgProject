@@ -84,6 +84,13 @@
 					.attr("width", 30)
 					.attr("height", 29)
 					.attr("xlink:href", "images/previous.png");
+				data_reference.append("svg:image")
+					.attr("class", "play-button")
+					.attr("x", 180)
+					.attr("y", 270)
+					.attr("width", 30)
+					.attr("height", 29)
+					.attr("xlink:href", "images/play.png");
 					
 				var texts = ["Year: ", "State: ", "Capacity: ", "Population: "];
 						
@@ -243,6 +250,38 @@
 					
 				d3.selectAll(".previous-button")
 					.on("click", previous_recolor);
+				
+				d3.selectAll(".play-button")
+					.on("click", play_recolor);
+				
+				var pause = false;
+				
+				function play_recolor(){
+					d3.selectAll(".play-button").remove()
+					d3.selectAll(".pause-button").remove()
+					data_reference.append("svg:image")
+						.attr("class", "pause-button")
+						.attr("x", 180)
+						.attr("y", 270)
+						.attr("width", 30)
+						.attr("height", 29)
+						.attr("xlink:href", "images/pause.png")
+						.on("click", function(){
+								data_reference.append("svg:image")
+								.attr("class", "play-button")
+								.attr("x", 180)
+								.attr("y", 270)
+								.attr("width", 30)
+								.attr("height", 29)
+								.attr("xlink:href", "images/play.png");
+								pause = true;
+						});
+					if (!pause){
+						recolor();
+						clearTimeout();
+						setTimeout(play_recolor, 2500);
+					}
+				}
 				
 				function previous_recolor(){
 					startSize += 2;
