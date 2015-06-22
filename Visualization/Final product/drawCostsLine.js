@@ -2,10 +2,20 @@
 
 			drawn = 0;
 			
-			d3.selectAll("#third_dropdown").remove();
-			d3.selectAll("svg").remove();
+			var svg = d3.selectAll("svg").remove()
+			d3.selectAll("#third_dropdown").remove()
+			d3.selectAll("#title").remove()
+			d3.selectAll("#graph-title").append("hr")
+					.attr("id", "title")
+					.attr("class", "col-lg-10 text-center")
+					.style("margin-left", "5%")
+			d3.selectAll("#graph-title").append("h3")
+					.attr("id", "title")
+					.attr("class", "col-lg-12 text-center")
+					.text("Line graph of costs of PV-panels per kW per state")
+
 			
-			var container = d3.selectAll("#content")
+			var container = d3.selectAll("#graph-title")
 			var third_dropdown = container.append("div")
 				.attr("id", "third_dropdown");
 			var dropdown = third_dropdown.append("div")

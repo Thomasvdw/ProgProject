@@ -1,7 +1,16 @@
 		function drawUScostsmap(){
-			d3.selectAll("#third_dropdown").remove()
 			var svg = d3.selectAll("svg").remove()
-	
+			d3.selectAll("#third_dropdown").remove()
+			d3.selectAll("#title").remove()
+			d3.selectAll("#graph-title").append("hr")
+					.attr("id", "title")
+					.attr("class", "col-lg-10 text-center")
+					.style("margin-left", "5%")
+			d3.selectAll("#graph-title").append("h3")
+					.attr("id", "title")
+					.attr("class", "col-lg-12 text-center")
+					.text("Visualization of costs of PV-panels per kW per state")
+					
 			var q = queue(1);
 			for (var i = 0; i < state_ids.length; i++){
 				q.defer(d3.csv, "\\Data\\PVdata\\normalized_costs_growth\\cost_per_size\\cost_per_size_" + state_ids[i] + ".csv");
@@ -34,14 +43,6 @@
 				.attr("width", width)
 				.attr("height", height)
 				.attr("class", "center-block");
-			
-			// insert Title
-			svg.append("text")
-				.attr("x", (width / 2))             
-				.attr("y", 20)
-				.attr("text-anchor", "middle")  
-				.style("font-size", "16px") 
-				.text("US states PV costs per kW");
 			
 			// Insert rectangle to show data in, add legend title, add buttons
 			var data_reference = svg.insert("g");
@@ -92,8 +93,8 @@
 						.attr("font-size", "10");
 				}
 				
-				var colors = ["#edf8fb","#ccece6","#99d8c9","#66c2a4","#2ca25f","#006d2c"]
-				var colors_legend = ["0 MW:","1 - 99 MW:", "100 - 999 MW:", "1000 - 9999 MW:", "10.000 - 99.999 MW:", "100.000+ MW:"]
+				var colors = ["grey","#006d2c","#2ca25f","#66c2a4","#99d8c9","#ccece6"]
+				var colors_legend = ["No data: ", "0 - 4999 $/kW:","5000 - 7499 $/kW:", "7500 - 9999 $/kW:", "10.000 - 12.499 $/kW:", "12.500+ $/kW:"]
 				for (var i = 0; i < colors.length; i++){
 					data_reference.append("text")
 						.attr("class", "legend")
@@ -104,7 +105,7 @@
 						.attr("font-size", "10");
 					data_reference.append("rect")
 						.attr("class", "legend")
-						.attr("x", 230)
+						.attr("x", 240)
 						.attr("y", 127 + 20 * i)
 						.attr("width", 10)
 						.attr("height", 10)
@@ -147,63 +148,11 @@
 						namePopulation[d.code] = allData[x + 1];
 						x += 2;
 					});
-					
-					/* Get max of costs
-					
-					max_sizes = []
-					
-					for (var x = 0; x < sizes.length; x++){
-						var tmp = [];
-						for (var y = 0; y < sizes[x].length; y++){
-							tmp.push(parseFloat(sizes[x][y].Size));
-						}
-						max_sizes.push(Math.max.apply(Math, tmp));
-					}
-					var global_max = Math.max.apply(Math, max_sizes);
-					*/
-					
-					svg.append("g")
-					.attr("class", "states-bundle")
-					.selectAll("path")
-					.data(data)
-					.enter()
-					.append("path")
-					.attr("d", path)
-					.attr("stroke", "black")
-					.on("mouseover", function(d) {
 
-						d3.selectAll(".text").remove()
-						
-						var population = parseFloat(namePopulation[nameCodes[d.id]][19].Population)
-						if (population > 450){
-							population = population / 1000;
-						}
-						population = String(population).substr(0,5);
-						
-						costs = parseFloat(nameSize[nameCodes[d.id]][15]["Cost/size"])
-						
-						var popup_texts = [nameSize[nameCodes[d.id]][15].Date, fullNames[d.id], costs + " $/kW", population + " mln"];
-							
-						for (var i = 0; i < popup_texts.length; i++){
-							data_reference.append("text")
-								.text(popup_texts[i])
-								.attr("class", "text")
-								.attr("x", 125 + 70)
-								.attr("y", 45 + 23 * i)
-								.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
-								.attr("font-size", "10");
-						}
-						
-					})
-					.attr("class", function(d,i) { 
-						return nameCodes[d.id];
-					})
-					.attr("fill", "#f7fcfd"); // TODO: starting coloring
+				setTimeout(recolor, 100);
 				
-				//setTimeout(recolor, 2500);
-				
-				var startSize = 14;
-				var startDate = 20;
+				var startSize = 15;
+				var startDate = 21
 				var startRect = 95;
 				var stepRect = 60;
 
@@ -272,25 +221,32 @@
 						.attr("fill", function(d,i) {
 							if (nameSize[nameCodes[d.id]] != undefined){
 								
+								
+								
 								// TODO: Decide on coloring! 
 								
 								var size = parseFloat(nameSize[nameCodes[d.id]][startSize]["Cost/size"]);
-								var size_normal = parseFloat(nameSize[nameCodes[d.id]][15]["Cost/size"]);
-								var size_difference = parseFloat(size - size_normal);
-								var growth = parseFloat(size_difference / size_normal);		
 								
-								if (isNaN(growth)){
-									growth = 0;
+								if (size == 0){
+									return "grey" 
 								}
-								
-								if (growth > 1){
-									growth = 1;
+								if (size < 5000){
+									return "#ccece6" 
 								}
-
-								return d3.interpolate("#f7fcfd", "#00441b")(growth);
+								if (size < 7500){
+									return "#99d8c9"
+								}
+								if (size < 10000){
+									return "#66c2a4"
+								}
+								if (size < 12500){
+									return "#2ca25f"
+								}
+								else {
+									return "#006d2c"
+								}
 							}
-							var growth = 0;
-							return d3.interpolate("#f7fcfd", "#00441b")(growth);
+							return "#ccece6" ;
 						});
 						if (startSize != 0){
 							startSize -= 1;

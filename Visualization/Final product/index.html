@@ -46,7 +46,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#Home">Data visualization project</a>
+                <a class="navbar-brand" onclick="home()" href="#Home">Data visualization project</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -95,6 +95,41 @@
             </ul>
         </div>
     </div>
+	<div id="introduction">
+	<div class="col-lg-12">
+		<div class="col-lg-4 text-left">
+			<h3> Introduction </h3>
+			<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. In viverra ultricies nulla et euismod. Aenean non fringilla libero, vel congue justo. Donec non lectus convallis, dictum lacus vitae, volutpat arcu. Cras eu ante ac nibh vestibulum placerat non eget ligula. Mauris vitae nisi vel sem luctus tempor vitae quis velit. Integer lacinia lorem eget cursus venenatis. Maecenas auctor quam at neque lacinia rutrum. Proin a ligula risus. Vestibulum dignissim tortor at pulvinar sagittis. Nullam orci lectus, hendrerit sed ligula sit amet, placerat varius urna. Quisque est purus, fringilla at placerat et, elementum et ante. Suspendisse nibh nibh, tincidunt a sapien vel, porta efficitur lectus. Fusce sit amet nisl in dolor euismod aliquam. </p>
+			<hr size=2>
+			<h3> United States map view </h3>
+			<ul class="list-unstyled">
+				<p><li><a id="mapcapacity" onclick="drawUSmap()"href="#CapacityGrowth">Capacity per state</a></li></p>
+				<p><li><a id="mapelectricity" onclick="drawUSelectricitymap()" href="#GeneratedElectricity">Generated electricity per capita per state</a></li></p>
+				<p><li><a id="mapcosts" onclick="drawUScostsmap()" href="#CostsperkW">Average costs per kW per state</a></li></p>
+			</ul>
+			<hr>
+			<h3> Line graph view </h3>
+			<ul class="list-unstyled">
+				<p><li><a onclick="drawCapacityLine()" href="#CapacityGrowth">Total capacity growth</a></li></p>
+				<p><li><a onclick="drawElectricityLine()" href="#GeneratedElectricity">Generated electricity per capita per state growth</a></li></p>
+				<p><li><a onclick="drawCostsLine()" href="#CostsperkW">Average costs per kW per state</a></li></p>
+			</ul>
+		</div>
+		<div class="col-lg-8 text-left">
+			<h3>Examples</h3> 
+			<!-- 936x474 -->
+			<a id="CostsLineImage" ><img src="images/CapacityMap.png" alt="" style="width:80%;height:80%;"></a>
+			<p></p>
+			<a id="CapacityMapImage" ><img src="images/CostsLine.png" alt="" style="width:80%;height:80%;"></a>
+			<p></p>
+		</div>
+	
+	</div>
+	</div>
+	<div id="graph-title">
+	</div>
+	
+
 
     <!-- jQuery Version 1.11.1 -->
     <script src="js/jquery.js"></script>
@@ -107,11 +142,7 @@
 	<script src="topojson.v1.min.js"></script>
 	<script src="queue.v1.min.js"></script>
 	<script src="drawCapacityUSmap.js"></script>
-	<script src="drawCostsUSmap.js"></script>
-	<script src="drawElectricityUSmap.js"></script>
 	<script src="drawCapacityLine.js"></script>
-	<script src="drawCostsLine.js"></script>
-	<script src="drawElectricityLine.js"></script>
 
 </body>
 

@@ -1,6 +1,16 @@
 		function drawUSelectricitymap(){
-			d3.selectAll("#third_dropdown").remove()
 			var svg = d3.selectAll("svg").remove()
+			d3.selectAll("#third_dropdown").remove()
+			d3.selectAll("#title").remove()
+			d3.selectAll("#graph-title").append("hr")
+					.attr("id", "title")
+					.attr("class", "col-lg-10 text-center")
+					.style("margin-left", "5%")
+			d3.selectAll("#graph-title").append("h3")
+					.attr("id", "title")
+					.attr("class", "col-lg-12 text-center")
+					.text("Visualization of PV-generated electricity per capita")	
+
 	
 			var q = queue(1);
 			for (var i = 0; i < state_ids.length; i++){
@@ -34,14 +44,6 @@
 				.attr("width", width)
 				.attr("height", height)
 				.attr("class", "center-block");
-			
-			// insert Title
-			svg.append("text")
-				.attr("x", (width / 2))             
-				.attr("y", 20)
-				.attr("text-anchor", "middle")  
-				.style("font-size", "16px") 
-				.text("US states PV generated electricity growth");
 			
 			// insert rectangle to show data in, buttons, and legend title
 			var data_reference = svg.insert("g");
@@ -80,7 +82,7 @@
 					.attr("height", 29)
 					.attr("xlink:href", "images/play.png");
 					
-				var texts = ["Year: ", "State: ", "Electricity: ", "Population"];
+				var texts = ["Year: ", "State: ", "Electricity p.p.: ", "Population"];
 							
 				for (var j = 0; j < texts.length; j++){
 					data_reference.append("text")
@@ -91,11 +93,11 @@
 						.attr("font-family", "Helvetica Neue,Helvetica,Arial,sans-serif;")
 						.attr("font-size", "10");
 				}
-				
+
 				var colors = ["#edf8fb","#ccece6","#99d8c9","#66c2a4","#2ca25f","#006d2c"]
 				
 				// TODO: change these!
-				var colors_legend = ["0 MW:","1 - 99 MW:", "100 - 999 MW:", "1000 - 9999 MW:", "10.000 - 99.999 MW:", "100.000+ MW:"]
+				var colors_legend = ["0 - 0.99 kWh:","1 - 4.99 kWh:", "5 - 9.99 kWh:", "10 - 49.99 kWh:", "50 - 99.99 kWh:", "100+ kWh:"]
 				for (var i = 0; i < colors.length; i++){
 					data_reference.append("text")
 						.attr("class", "legend")
@@ -150,59 +152,10 @@
 						x += 2;
 					});
 					
-					/* Get global maximum value in data
-					max_sizes = []
-					
-					for (var x = 0; x < sizes.length; x++){
-						var tmp = [];
-						for (var y = 0; y < sizes[x].length; y++){
-							tmp.push(parseFloat(sizes[x][y].Size));
-						}
-						max_sizes.push(Math.max.apply(Math, tmp));
-					}
-					var global_max = Math.max.apply(Math, max_sizes);
-					*/
-					
-					svg.append("g")
-					.attr("class", "states-bundle")
-					.selectAll("path")
-					.data(data)
-					.enter()
-					.append("path")
-					.attr("d", path)
-					.attr("stroke", "black")
-					.on("mouseover", function(d) {
-						
-						d3.selectAll(".text").remove()
-						
-						// Get population numbers
-						var population = parseFloat(namePopulation[nameCodes[d.id]][19].Population)
-						if (population > 450){
-							population = population / 1000;
-						}
-						population = String(population).substr(0,5);
-						
-						var popup_texts = [nameSize[nameCodes[d.id]][15].Date, fullNames[d.id], parseFloat(nameSize[nameCodes[d.id]][15]["Annual generated"]) + " kWh", population + " mln"];
-							
-						for (var i = 0; i < popup_texts.length; i++){
-							data_reference.append("text")
-								.attr("class", "text")
-								.text(popup_texts[i])
-								.attr("x", 125 + 70)
-								.attr("y", 45 + 23 * i)
-								.attr("font-family", "Verdana")
-								.attr("font-size", "10");
-						} 
-					})
-					.attr("class", function(d,i) { 
-						return nameCodes[d.id];
-					})
-					.attr("fill", "#f7fcfd"); // TODO
+				setTimeout(recolor, 100);
 				
-				//setTimeout(recolor, 2500);
-				
-				var startSize = 14;
-				var startDate = 20;
+				var startSize = 15;
+				var startDate = 21;
 				var startRect = 95;
 				var stepRect = 60;
 
@@ -244,7 +197,6 @@
 						.append("path")
 						.attr("d", path)
 						.on("mouseover", function(d) {
-													
 							d3.selectAll(".text").remove()
 							
 							var size = parseFloat(nameSize[nameCodes[d.id]][startSize]["Annual generated"])
@@ -252,6 +204,10 @@
 							if (population > 450){
 								population = population / 1000;
 							}
+							
+							size = size / (population * 1000)
+							
+							size = String(size).substr(0,5);						
 							population = String(population).substr(0,5);
 							
 							var popup_texts = [nameSize[nameCodes[d.id]][startSize + 1].Date, fullNames[d.id], size + " kWh", population + " mln"];
@@ -271,23 +227,36 @@
 							if (nameSize[nameCodes[d.id]] != undefined){
 								
 								// TODO: better "growth" amounts
-								var size = parseFloat(nameSize[nameCodes[d.id]][startSize]["Annual generated"]);
-								var size_normal = parseFloat(nameSize[nameCodes[d.id]][15]["Annual generated"]);
-								var size_difference = parseFloat(size - size_normal);
-								var growth = parseFloat(size_difference / size_normal);	
+								var electricity = parseFloat(nameSize[nameCodes[d.id]][startSize]["Annual generated"]);
 								
-								if (isNaN(growth)){
-									growth = 0;
-								}
 								
-								if (growth > 1){
-									growth = 1;
+								var population = parseFloat(namePopulation[nameCodes[d.id]][startDate].Population);
+								if (population > 450){
+									population = population / 1000;
+								}						
+								
+								var electricityPerCapita = electricity / (population * 1000);
+								
+								if (electricityPerCapita < 1){
+									return "#edf8fb"
 								}
-
-								return d3.interpolate("#f7fcfd", "#00441b")(growth);
+								if (electricityPerCapita < 5){
+									return "#ccece6" 
+								}
+								if (electricityPerCapita < 10){
+									return "#99d8c9"
+								}
+								if (electricityPerCapita < 50){
+									return "#66c2a4"
+								}
+								if (electricityPerCapita < 100){
+									return "#2ca25f"
+								}
+								if (electricityPerCapita < 500){
+									return "#006d2c"
+								}
 							}
-							var growth = 0;
-							return d3.interpolate("#f7fcfd", "#00441b")(growth);
+							return d3.interpolate("#edf8fb", "#006d2c")*0;
 						});
 						if (startSize != 0){
 							startSize -= 1;
