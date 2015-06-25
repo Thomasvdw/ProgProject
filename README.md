@@ -1,6 +1,12 @@
 # ProgProject
 GitHub for Programming Project June 2015
 
+## Information
+Thomas van der Wardt
+June 2015
+Photovoltaic growth in the US: 2000-2015
+The MIT License (MIT) Copyright (c) 2015, Thomas van der Wardt
+
 ## Problem definition ##
 ### Intro ###
 Renewable energy resources, their usage, as well as national and international differences between usage, is a topic that has 
@@ -18,6 +24,8 @@ The visualization will consist of the following different views:
 2) Line graph, this graph can be triggered by clicking on a single state, showing the graph over time of the above mentioned parameters;
 
 Altogether, this will mean that a lot of data must be found and bound to HTML elements using d3. Based on experience from the Data Processing course of the minor Programming at the UvA this visualization will be developed.
+
+In the map "Visualization", the final product is available. It takes data from the map "Data", and uses several scripts which are stored in their respective maps inside the Visualization map. 
 
 ### Data ###
 The National Renewable Energy Laboratory has been working on their database with data on solar panels in the US since the beginning of the 21st century, and currently have more than 420,000 entries of installed solar panels in the US. The database is called 'The Open PV Project' and, as the name suggests, is a publicly accessible database. 
@@ -65,3 +73,10 @@ Fourth week: Fine-tune, cleaning all code, cleaning up GitHub. Prepare final ver
 ## Review other visualizations
 
 Other visualization also often use a map and color coding to visualize certain trends or growths, and linegraphs are also widespread. By making it possible to select and deselect certain states, and providing multiple 'types' of growth, the visualization will hopefully give new insights into the solar panels market in the US. 
+
+## External files
+
+Data from: The Open PV Project, Census Population data, Solar radiation data from NREL. 
+Images from: 
+- California solar panels: Nellis Solar Power Plant: U.S. Air Force photo/Airman 1st Class Nadine Y. Barclay / U.S. Air Force photo/Airman 1st Class Nadine Y. Barclay 
+- Solar panel installation: Dennis Schroeder/NREL
