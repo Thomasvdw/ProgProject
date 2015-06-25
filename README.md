@@ -89,5 +89,5 @@ Data from:
 
 Images from: 
 
-- California solar panels: Nellis Solar Power Plant: U.S. Air Force photo/Airman 1st Class Nadine Y. Barclay / U.S. Air Force photo/Airman 1st Class Nadine Y. Barclay 
+- California solar panels: Nellis Solar Power Plant: U.S. Air Force photo/Airman 1st Class Nadine Y. Barclay
 - Solar panel installation: Dennis Schroeder/NREL
