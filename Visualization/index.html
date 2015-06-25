@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Thomas van der Wardt">
+
+    <title>Photovoltaic growth over years in the US</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+	<link rel="stylesheet" type="text/css" href="css/USstates.css">
+	<link rel="stylesheet" type="text/css" href="css/USline.css">
+    <style>
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" onclick="home()" href="index.html">Data visualization project</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle"> US map<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a id="mapcosts" onclick="drawUScostsmap()" href="#CostsperkW">Costs per kW</a></li>
+                            <li><a id="mapelectricity" onclick="drawUSelectricitymap()" href="#GeneratedElectricity">Normalized generated electricity</a></li>
+                            <li><a id="mapcapacity" onclick="drawUScapacitymap()"href="#CapacityGrowth">Capacity growth</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+					<!-- <div class="x"> -->
+						<a href="#" data-toggle="dropdown" class="dropdown-toggle"> Line Graph<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a onclick="drawCostsLine()" href="#CostsperkW">Costs per kW</a></li>
+                            <li><a onclick="drawElectricityLine()" href="#GeneratedElectricity">Normalized generated electricity</a></li>
+                            <li><a onclick="drawCapacityLine()" href="#CapacityGrowth">Capacity growth</a></li>
+						</ul>
+					<!-- </div> -->
+					</li>
+                    <li>
+                        <a href="#references">References</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+	<div id="content">
+		<div class="thumbnail">
+			<img src="images/solarpanels_small.jpg" alt="..." />
+			<div class="caption post-content">
+				<h1>Data visualization of photovoltaics in the U.S.</h1>
+				<h4>Growth of 2000 - 2015 per state in:</h4>
+				<ul class="list-unstyled">
+					<li>Interactive projected map-view</li>
+					<li>Interactive graph-view</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div id="introduction">
+	<div class="col-lg-12">
+		<div class="col-lg-5 text-left">
+			<h3> Introduction </h3>
+			<hr size=2>
+			<p> 
+				Renewable energy resources, their usage, as well as national and international differences between usage, is a topic that has been visualized in many ways the last decades. Large organizations such governmental research institutes and consultancy firms have spent a lot of time in this field, in attempts to identify trends and growth of renewable energy.
+			</p>
+			<p>
+				Unfortunately, it seems that growth is mostly visualized in terms of total installed capacity, or amount of jobs in the renewable energy sector. I want to change this, and visualize the growth of renewable energy per US state based on a number of different parameters:
+				<ul>
+					<li> Total capacity divided by state population per year, from 2000 - now;</li>
+					<li> Annual generated electricity per state per capita, based on average solar radiation per county;</li>
+					<li> Change in costs per kW for solar panels per state;</li>
+				</ul>
+			</p>
+			<p>
+				Below, each of the links will trigger the chosen visualization to show up underneath it. You can choose between two different views. The first is an animated map of the US states, showing the parameter color-coded per state as per the legenda, for 2000 to 2015. By hovering over a state, you can see the information for that specific state. The second is a line-graph showing the changes over time for each of the states, where the red line is the selected state, and the blue lines are all the other states. You can switch between states by either 1) clicking on a different line, or 2) selecting a different state from the dropdown-menu just above the map. 
+			</p>
+			<hr size=2>
+			<h3> United States map view </h3>
+			<ul class="list-unstyled">
+				<p><li><a id="mapcapacity" onclick="drawUScapacitymap()"href="#capacityMap">Capacity per state</a></li></p>
+				<p><li><a id="mapelectricity" onclick="drawUSelectricitymap()" href="#electricityMap">Generated electricity per capita per state</a></li></p>
+				<p><li><a id="mapcosts" onclick="drawUScostsmap()" href="#costsMap">Average costs per kW per state</a></li></p>
+			</ul>
+			<hr>
+			<h3> Line graph view </h3>
+			<ul class="list-unstyled">
+				<p><li><a onclick="drawCapacityLine()" href="#capacityLine">Total capacity growth</a></li></p>
+				<p><li><a onclick="drawElectricityLine()" href="#electricityLine">Generated electricity per capita per state growth</a></li></p>
+				<p><li><a onclick="drawCostsLine()" href="#costsLine">Average costs per kW per state</a></li></p>
+			</ul>
+		</div>
+		<div class="col-lg-7 text-left">
+			<h3>Examples</h3> 
+			<hr size=2>
+			<h4><em>Map view animating the growth of total capacity over time</em></h4> 
+			<a id="CostsMapImage" ><img src="images/CapacityMap.png" title="Example capacity line graph" alt="" style="width:100%;height:100%;"></a>
+			<hr size=2>
+			<h4><em>Line graph visualizing the growth of total capacity</em></h4> 
+			<a id="CapacityLineImage" ><img src="images/CostsLine.png" title="Example capacity US map" alt="" style="width:100%;height:100%;"></a>
+			<p></p>
+		</div>
+	
+	</div>
+	</div>
+	<div id="graph-title">
+	</div>
+	<div id="graph">
+	</div>
+	<div class="col-lg-12 text-left">
+		<div id="references">
+			<hr>
+		</div>
+	</div>
+	<div id="references">
+		<div class="col-lg-5 text-left">
+			<h3>References</h3>
+			<b>Photovoltaic data:</b>
+			<p>
+				Data from 'The Open PV Project', a data-base with the 'real-time status of the photovoltaic market in the U.S. All of the data has been taken from the database in June 2015, therefore the data of 2015 is updated up until this date. Any changes in the database after this date are not displayed in any of the visualizations. 
+			</p>
+			<p><em>
+				'The Open PV Project' is a collaborative effort between government, industry, and the public that is compiling a comprehensive database of photovoltaic (PV) installation data for the United States. Data for the project are voluntarily contributed from a variety of sources including solar incentive programs, utilities, installers, and the general public. This database serves as a web-based resource for users to easily explore and understand the current and past trends of the US PV industry. The data collected is actively maintained by the contributors and are always changing to provide an evolving, up-to-date snapshot of the US solar power market.
+				
+				For more information: <a href="https://openpv.nrel.gov/index">visit the Open PV website</a>.
+			</em></p>
+			<b>Population data:</b>
+			<p>
+				Data from 'United States Census Bureau', which produces estimates for various demographic components at a national, state, and county level of geography. Latest data was released May 21, 2015. The population data are estimates, and should not be taken as an absolute number.
+			</p>
+			<p><em>
+				The Census Bureau's Population Estimates Program (PEP) produces estimates of the population for the United States, its states, counties, cities, and towns, as well as for the Commonwealth of Puerto Rico and its municipios. Demographic components of population change (births, deaths, and migration) are produced at the national, state, and county levels of geography. Additionally, housing unit estimates are produced for the nation, states, and counties. For more information <a href="http://www.census.gov/popest/">visit the Census Population Estimates website</a>.
+			</em></p>
+			<b>US states JSON data:</b>
+			<p>
+				Paths to draw each state as a scalable vector graphic were obtained from an example by Mike Bostocks. Visit  <a href="http://bost.ocks.org/mike/">his website</a> for more d3 examples. 
+			</p>
+			
+		</div>
+		<div class="col-lg-7 text-left">
+			<br>
+			<h4><em>Photovoltaics in California</h4>
+			<a id="openpv" ><img src="images/photovoltaic_california.jpg" title="photovoltaic_array_california" alt="" style="width:100%;height:100%;"></a>
+			<hr size=2>
+			<p></p>
+		</div>
+	</div>
+
+
+    <!-- jQuery Version 1.11.1 -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+	
+	<!-- D3 JavaScript -->
+	<script src="js/d3.v3.js"></script>
+	<script src="js/topojson.v1.min.js"></script>
+	<script src="js/queue.v1.min.js"></script>
+	<script src="js/drawMaps.js"></script>
+	<script src="js/drawLines.js"></script>
+	
+</body>
+
+</html>
