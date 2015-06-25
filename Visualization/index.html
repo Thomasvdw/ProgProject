@@ -54,23 +54,21 @@
 					<li class="dropdown">
 						<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle"> US map<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a id="mapcosts" onclick="drawUScostsmap()" href="#CostsperkW">Costs per kW</a></li>
-                            <li><a id="mapelectricity" onclick="drawUSelectricitymap()" href="#GeneratedElectricity">Normalized generated electricity</a></li>
-                            <li><a id="mapcapacity" onclick="drawUScapacitymap()"href="#CapacityGrowth">Capacity growth</a></li>
+                            <li><a onclick="drawUScapacitymap()" href="#CapacityGrowth">Total capacity</a></li>
+                            <li><a onclick="drawUSelectricitymap()" href="#GeneratedElectricity">Annually generated electricity per capita</a></li>
+							<li><a onclick="drawUScostsmap()" href="#CostsperkW">Average costs per kW</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
-					<!-- <div class="x"> -->
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle"> Line Graph<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a onclick="drawCostsLine()" href="#CostsperkW">Costs per kW</a></li>
-                            <li><a onclick="drawElectricityLine()" href="#GeneratedElectricity">Normalized generated electricity</a></li>
-                            <li><a onclick="drawCapacityLine()" href="#CapacityGrowth">Capacity growth</a></li>
+                            <li><a onclick="drawCapacityLine()" href="#CapacityGrowth">Total capacity</a></li>
+                            <li><a onclick="drawElectricityLine()" href="#GeneratedElectricity">Annually generated electricity per capita</a></li>
+							<li><a onclick="drawCostsLine()" href="#CostsperkW">Average costs per kW</a></li>
 						</ul>
-					<!-- </div> -->
 					</li>
                     <li>
-                        <a href="#references">References</a>
+                        <a href="#refs">References</a>
                     </li>
                 </ul>
             </div>
@@ -98,42 +96,41 @@
 	<div class="col-lg-12">
 		<div class="col-lg-5 text-left">
 			<h3> Introduction </h3>
-			<hr size=2>
+			<hr>
 			<p> 
 				Renewable energy resources, their usage, as well as national and international differences between usage, is a topic that has been visualized in many ways the last decades. Large organizations such governmental research institutes and consultancy firms have spent a lot of time in this field, in attempts to identify trends and growth of renewable energy.
 			</p>
 			<p>
-				Unfortunately, it seems that growth is mostly visualized in terms of total installed capacity, or amount of jobs in the renewable energy sector. I want to change this, and visualize the growth of renewable energy per US state based on a number of different parameters:
+				Unfortunately, it seems that growth is mostly visualized in terms of total installed capacity, or amount of jobs in the renewable energy sector. I want to change this, and visualize the growth of renewable energy per US state based on a number of different parameters:</p>
 				<ul>
 					<li> Total capacity divided by state population per year, from 2000 - now;</li>
 					<li> Annual generated electricity per state per capita, based on average solar radiation per county;</li>
 					<li> Change in costs per kW for solar panels per state;</li>
 				</ul>
-			</p>
 			<p>
 				Below, each of the links will trigger the chosen visualization to show up underneath it. You can choose between two different views. The first is an animated map of the US states, showing the parameter color-coded per state as per the legenda, for 2000 to 2015. By hovering over a state, you can see the information for that specific state. The second is a line-graph showing the changes over time for each of the states, where the red line is the selected state, and the blue lines are all the other states. You can switch between states by either 1) clicking on a different line, or 2) selecting a different state from the dropdown-menu just above the map. 
 			</p>
-			<hr size=2>
+			<hr>
 			<h3> United States map view </h3>
 			<ul class="list-unstyled">
-				<p><li><a id="mapcapacity" onclick="drawUScapacitymap()"href="#capacityMap">Capacity per state</a></li></p>
-				<p><li><a id="mapelectricity" onclick="drawUSelectricitymap()" href="#electricityMap">Generated electricity per capita per state</a></li></p>
-				<p><li><a id="mapcosts" onclick="drawUScostsmap()" href="#costsMap">Average costs per kW per state</a></li></p>
+				<li><a id="mapcapacity" onclick="drawUScapacitymap()" href="#capacityMap">Total capacity</a></li>
+				<li><a id="mapelectricity" onclick="drawUSelectricitymap()" href="#electricityMap">Annually generated electricity per capita</a></li>
+				<li><a id="mapcosts" onclick="drawUScostsmap()" href="#costsMap">Average costs per kW</a></li>
 			</ul>
 			<hr>
 			<h3> Line graph view </h3>
 			<ul class="list-unstyled">
-				<p><li><a onclick="drawCapacityLine()" href="#capacityLine">Total capacity growth</a></li></p>
-				<p><li><a onclick="drawElectricityLine()" href="#electricityLine">Generated electricity per capita per state growth</a></li></p>
-				<p><li><a onclick="drawCostsLine()" href="#costsLine">Average costs per kW per state</a></li></p>
+				<li><a onclick="drawCapacityLine()" href="#capacityLine">Total capacity</a></li>
+				<li><a onclick="drawElectricityLine()" href="#electricityLine">Annually generated electricity </a></li>
+				<li><a onclick="drawCostsLine()" href="#costsLine">Average costs per kW</a></li>
 			</ul>
 		</div>
 		<div class="col-lg-7 text-left">
 			<h3>Examples</h3> 
-			<hr size=2>
+			<hr>
 			<h4><em>Map view animating the growth of total capacity over time</em></h4> 
 			<a id="CostsMapImage" ><img src="images/CapacityMap.png" title="Example capacity line graph" alt="" style="width:100%;height:100%;"></a>
-			<hr size=2>
+			<hr>
 			<h4><em>Line graph visualizing the growth of total capacity</em></h4> 
 			<a id="CapacityLineImage" ><img src="images/CostsLine.png" title="Example capacity US map" alt="" style="width:100%;height:100%;"></a>
 			<p></p>
@@ -145,13 +142,13 @@
 	</div>
 	<div id="graph">
 	</div>
-	<div class="col-lg-12 text-left">
-		<div id="references">
+	<div id="references">
+		<div class="col-lg-12 text-left">
 			<hr>
 		</div>
-	</div>
-	<div id="references">
+
 		<div class="col-lg-5 text-left">
+			<div id="refs">
 			<h3>References</h3>
 			<b>Photovoltaic data:</b>
 			<p>
@@ -173,16 +170,19 @@
 			<p>
 				Paths to draw each state as a scalable vector graphic were obtained from an example by Mike Bostocks. Visit  <a href="http://bost.ocks.org/mike/">his website</a> for more d3 examples. 
 			</p>
+			</div>
+
 			
 		</div>
 		<div class="col-lg-7 text-left">
 			<br>
-			<h4><em>Photovoltaics in California</h4>
+			<h4><em>Photovoltaics in California</em></h4>
 			<a id="openpv" ><img src="images/photovoltaic_california.jpg" title="photovoltaic_array_california" alt="" style="width:100%;height:100%;"></a>
-			<hr size=2>
+			<hr>
 			<p></p>
 		</div>
 	</div>
+
 
 
     <!-- jQuery Version 1.11.1 -->

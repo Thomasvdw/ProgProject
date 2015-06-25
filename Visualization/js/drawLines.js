@@ -43,6 +43,9 @@ q.awaitAll(savePopulationData);
 		
 // drawn = 1 when a graph has been drawn, 0 when this is not the case. (only for line-graph)
 var drawn = 0;
+
+// when divided = 0, the generated electricity per person graph has not been drawn before, if 1 it has been drawn before. 
+var divided = 0;
 			
 // Variables to store the loaded data in. 
 var CapacityData;
@@ -364,7 +367,7 @@ function drawSelectedState(state, Data, type){
 				else if (type == "electricity"){
 					d["Annual generated"] = +d["Annual generated"];
 					if (d["Annual generated"] > 0 && d.Date != null){
-						if (drawn == 0){
+						if (drawn == 0 && divided != 1){
 							d["Annual generated"] = d["Annual generated"] / statePopulation[state_ids[i]]
 						}
 						stateData.push(d);
@@ -440,8 +443,12 @@ function drawSelectedState(state, Data, type){
 		}
 		/* If all paths have been drawn, drawn becomes 1, 
 		which means a graph has been drawn and the corresponding data has been reformatted */
-		
 		drawn += 1;
+		
+		// if the annually generated electricity per capita has been drawn before, divided = 1;
+		if (type == "electricity"){
+			divided = 1;
+		}
 
 		svg.append("g")
 			.attr("class", "x axis")

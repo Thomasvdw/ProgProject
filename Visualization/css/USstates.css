@@ -3,6 +3,11 @@
   stroke: "#fff";
 }
 
+li {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
 .post-content {
     background: none repeat scroll 0 0 #FFffff;
     /*opacity: 0.5;*/
