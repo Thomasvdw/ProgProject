@@ -3,9 +3,13 @@ GitHub for Programming Project June 2015
 
 ## Information
 Thomas van der Wardt
+
 June 2015
+
 Photovoltaic growth in the US: 2000-2015
+
 The MIT License (MIT) Copyright (c) 2015, Thomas van der Wardt
+
 
 ## Problem definition ##
 ### Intro ###
@@ -76,7 +80,13 @@ Other visualization also often use a map and color coding to visualize certain t
 
 ## External files
 
-Data from: The Open PV Project, Census Population data, Solar radiation data from NREL. 
+Data from: 
+
+- The Open PV Project;
+- Census Population data;
+- Solar radiation data from NREL.
+
 Images from: 
+
 - California solar panels: Nellis Solar Power Plant: U.S. Air Force photo/Airman 1st Class Nadine Y. Barclay / U.S. Air Force photo/Airman 1st Class Nadine Y. Barclay 
 - Solar panel installation: Dennis Schroeder/NREL
