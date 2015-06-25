@@ -84,7 +84,8 @@ Data from:
 
 - The Open PV Project;
 - Census Population data;
-- Solar radiation data from NREL.
+- Solar radiation data from NREL;
+- US.json from Mike Bostock.
 
 Images from: 
 
