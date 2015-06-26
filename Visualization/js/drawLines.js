@@ -1,3 +1,4 @@
+'use strict'
 // Variables that are used in all d3 javascript files, to lookup names by ID and full name, and date formatting. 	
 var parseDate = d3.time.format("%d-%m-%Y").parse;
 // dates variable to use as x-axis in US map-view
@@ -268,7 +269,7 @@ function drawSelectedState(state, Data, type){
 			width = 1160 - margin.left - margin.right,
 			height = 500 - margin.top - margin.bottom;
 					
-		var parseDate = d3.time.format("%d-%m-%Y").parse;
+		var parseDate = d3.time.format("%d-%m-%Y").parse,
 			bisectDate = d3.bisector(function(d) {return d.Date;}).left;
 		
 		var xMinRange = 75, 
@@ -334,7 +335,7 @@ function drawSelectedState(state, Data, type){
 		var selectedStateSizes = getSizes(allSizes, selectedState);
 			
 		// Put 2015 population per state in object, adjust for mismatches in data, and multiply by 1000 to reformat. 
-		statePopulation = {};
+		var statePopulation = {};
 		for (var i = 0; i < state_ids.length; i++){
 			var year2015index = 34, 
 				populationDelimiter = 450, 
@@ -348,8 +349,8 @@ function drawSelectedState(state, Data, type){
 		
 		// For each of the states draw path according to the data points
 		for (var i = 0; i < state_ids.length; i++){
-			stateSizes = getSizes(allSizes, state_ids[i]);
-			stateData = [];		
+			var stateSizes = getSizes(allSizes, state_ids[i]);
+			var stateData = [];		
 				
 			// Reformat data if this has no been done before, make sure to do for every type
 			stateSizes.forEach(function(d, j) {

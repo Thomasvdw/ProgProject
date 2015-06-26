@@ -1,3 +1,4 @@
+'use strict'
 function drawUScapacitymap(){
 	// Remove previous svg elements, add title for new graph. 
 	var svg = d3.selectAll("svg").remove()
@@ -888,8 +889,8 @@ function drawUScostsmap(){
 							if (population > populationDelimiter){
 								population = population / 1000;
 							}
-							population = String(population).substr(0,5);	
-							costs = parseFloat(nameSize[nameCodes[d.id]][startSize + 1]["Cost/size"])
+							var population = String(population).substr(0,5);	
+							var costs = parseFloat(nameSize[nameCodes[d.id]][startSize + 1]["Cost/size"])
 							
 							var popup_texts = [nameSize[nameCodes[d.id]][startSize + 1].Date, fullNames[d.id], costs + " $/kW", population + " mln"];
 							for (var i = 0; i < popup_texts.length; i++){
@@ -911,13 +912,13 @@ function drawUScostsmap(){
 									return "grey" 
 								}
 								var bins = [5000, 7500, 10000, 12500]
-								var binColors = ["#ccece6" , "#99d8c9", "#66c2a4", "#2ca25f"]
+								var binColors = ["#006d2c", "#2ca25f","#66c2a4" , "#99d8c9"]
 								for (var i = 0; i < bins.length; i++){
 									if (size < bins[i]){
 										return binColors[i];
 									}
 								}
-								return "#006d2c"								
+								return "#ccece6"				
 							}
 							return "grey";
 						});
