@@ -10,6 +10,14 @@ Photovoltaic growth in the US: 2000-2015
 
 The MIT License (MIT) Copyright (c) 2015, Thomas van der Wardt
 
+## How to view visualization
+
+In the directory 'Visualization', all script files are stored (JS, CSS, and HTML) which make up the webpage and contain the actual visualization. The data which is visualized is stored in separate directories, and is accessed by the scripts multiple times. 
+
+To be able to view the visualiztion, download both the 'Data' and the 'Visualization' directory, and host a server (e.g. a simple HTTPServer using python). Afterwards traverse to the Visualization directory in your browser, and webpage should open, containing an introduction, links to trigger drawing various visualizations, and references. Use Google Chrome to view this browser; this visualization has been fully tested in Google Chrome and therefore is only guaranteed to fully work in Google Chrome. 
+
+If you run into any problems trying to view this visualization, please e-mail me at info@deenergietoekomst.nl and I will respond as soon as possible. 
+
 
 ## Problem definition ##
 ### Intro ###
